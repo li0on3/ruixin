@@ -1,0 +1,746 @@
+// ======================================
+// 瑞幸分销系统 - 移动端优化样式
+// ======================================
+
+// 一、移动端设计变量
+// ==================
+
+:root {
+  // 移动端专用变量
+  --mobile-header-height: 3.5rem;
+  --mobile-nav-height: 3.5rem;
+  --mobile-padding: 1rem;
+  --mobile-margin: 0.75rem;
+  --mobile-border-radius: 0.75rem;
+  --mobile-touch-target: 2.75rem; // 44px minimum touch target
+  
+  // 移动端字体大小
+  --mobile-text-xs: 0.75rem;
+  --mobile-text-sm: 0.875rem;
+  --mobile-text-base: 1rem;
+  --mobile-text-lg: 1.125rem;
+  --mobile-text-xl: 1.25rem;
+  --mobile-text-2xl: 1.5rem;
+  --mobile-text-3xl: 1.875rem;
+  
+  // 移动端间距
+  --mobile-space-1: 0.25rem;
+  --mobile-space-2: 0.5rem;
+  --mobile-space-3: 0.75rem;
+  --mobile-space-4: 1rem;
+  --mobile-space-5: 1.25rem;
+  --mobile-space-6: 1.5rem;
+  --mobile-space-8: 2rem;
+}
+
+// 二、移动端断点系统
+// ==================
+
+// 超小屏幕（手机竖屏）
+@media (max-width: 480px) {
+  .mobile-xs-hidden { display: none !important; }
+  .mobile-xs-block { display: block !important; }
+  .mobile-xs-flex { display: flex !important; }
+  .mobile-xs-grid { display: grid !important; }
+  
+  // 容器布局
+  .container {
+    padding: 0 var(--mobile-space-4);
+    max-width: 100%;
+  }
+  
+  // 网格系统调整
+  .el-row {
+    margin: 0 !important;
+  }
+  
+  .el-col {
+    padding: 0 var(--mobile-space-2) !important;
+  }
+  
+  // 强制单列布局
+  .force-mobile-single-col {
+    .el-col {
+      flex: 0 0 100% !important;
+      max-width: 100% !important;
+    }
+  }
+}
+
+// 小屏幕（手机横屏/小平板）
+@media (max-width: 768px) {
+  .mobile-hidden { display: none !important; }
+  .mobile-block { display: block !important; }
+  .mobile-flex { display: flex !important; }
+  .mobile-grid { display: grid !important; }
+  
+  // 布局系统优化
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .app-sidebar {
+    position: fixed !important;
+    top: 0;
+    left: -100%;
+    width: 280px !important;
+    height: 100vh;
+    z-index: 1050;
+    transition: left 0.3s ease;
+    box-shadow: var(--shadow-xl);
+    
+    &.is-mobile-open {
+      left: 0;
+    }
+  }
+  
+  .app-main {
+    margin-left: 0 !important;
+    padding: var(--mobile-space-4);
+    padding-top: calc(var(--mobile-header-height) + var(--mobile-space-4));
+  }
+  
+  // 移动端header优化
+  .app-header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--mobile-header-height);
+    z-index: 1040;
+    padding: 0 var(--mobile-space-4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-default);
+    box-shadow: var(--shadow-sm);
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: var(--mobile-space-3);
+      
+      .mobile-menu-btn {
+        width: var(--mobile-touch-target);
+        height: var(--mobile-touch-target);
+        border: none;
+        background: none;
+        color: var(--text-primary);
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background: var(--gray-100);
+        }
+        
+        &:active {
+          background: var(--gray-200);
+        }
+      }
+      
+      .header-title {
+        font-size: var(--mobile-text-lg);
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+      }
+    }
+    
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: var(--mobile-space-2);
+      
+      .header-action {
+        width: var(--mobile-touch-target);
+        height: var(--mobile-touch-target);
+        border: none;
+        background: none;
+        color: var(--text-secondary);
+        font-size: 1.125rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background: var(--gray-100);
+          color: var(--text-primary);
+        }
+      }
+    }
+  }
+  
+  // 遮罩层
+  .mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1030;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    
+    &.is-active {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+// 三、移动端组件优化
+// ==================
+
+@media (max-width: 768px) {
+  
+  // 卡片组件优化
+  .el-card {
+    margin-bottom: var(--mobile-space-4);
+    border-radius: var(--mobile-border-radius);
+    
+    .el-card__header {
+      padding: var(--mobile-space-4);
+      border-bottom: 1px solid var(--border-light);
+      
+      .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--mobile-space-3);
+        
+        .card-title {
+          font-size: var(--mobile-text-lg);
+        }
+        
+        .card-actions {
+          width: 100%;
+          justify-content: flex-end;
+        }
+      }
+    }
+    
+    .el-card__body {
+      padding: var(--mobile-space-4);
+    }
+  }
+  
+  // 表格组件移动端优化
+  .el-table {
+    font-size: var(--mobile-text-sm);
+    
+    .el-table__header {
+      th {
+        padding: var(--mobile-space-3) var(--mobile-space-2);
+        font-size: var(--mobile-text-xs);
+      }
+    }
+    
+    .el-table__body {
+      td {
+        padding: var(--mobile-space-3) var(--mobile-space-2);
+        font-size: var(--mobile-text-sm);
+      }
+    }
+    
+    // 隐藏不重要的列
+    .mobile-hidden-col {
+      display: none !important;
+    }
+  }
+  
+  // 移动端表格卡片化
+  .mobile-table-card {
+    .el-table {
+      display: none;
+    }
+    
+    .mobile-card-list {
+      display: block;
+      
+      .mobile-card-item {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-default);
+        border-radius: var(--mobile-border-radius);
+        padding: var(--mobile-space-4);
+        margin-bottom: var(--mobile-space-3);
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        .card-item-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: var(--mobile-space-3);
+          
+          .card-item-title {
+            font-size: var(--mobile-text-base);
+            font-weight: 600;
+            color: var(--text-primary);
+          }
+          
+          .card-item-status {
+            font-size: var(--mobile-text-sm);
+          }
+        }
+        
+        .card-item-content {
+          .card-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--mobile-space-2) 0;
+            border-bottom: 1px solid var(--border-light);
+            
+            &:last-child {
+              border-bottom: none;
+            }
+            
+            .card-item-label {
+              font-size: var(--mobile-text-sm);
+              color: var(--text-secondary);
+              font-weight: 500;
+            }
+            
+            .card-item-value {
+              font-size: var(--mobile-text-sm);
+              color: var(--text-primary);
+              text-align: right;
+            }
+          }
+        }
+        
+        .card-item-actions {
+          margin-top: var(--mobile-space-3);
+          padding-top: var(--mobile-space-3);
+          border-top: 1px solid var(--border-light);
+          display: flex;
+          gap: var(--mobile-space-2);
+          justify-content: flex-end;
+          
+          .el-button {
+            flex: 1;
+            max-width: 120px;
+          }
+        }
+      }
+    }
+  }
+  
+  // 表单组件移动端优化
+  .el-form {
+    .el-form-item {
+      margin-bottom: var(--mobile-space-5);
+      
+      .el-form-item__label {
+        font-size: var(--mobile-text-sm);
+        font-weight: 600;
+        color: var(--text-primary);
+        line-height: 1.4;
+        margin-bottom: var(--mobile-space-2);
+      }
+      
+      .el-form-item__content {
+        .el-input,
+        .el-select,
+        .el-textarea {
+          .el-input__wrapper,
+          .el-select__wrapper {
+            min-height: var(--mobile-touch-target);
+            border-radius: var(--mobile-border-radius);
+            font-size: var(--mobile-text-base);
+          }
+        }
+      }
+      
+      // inline表单在移动端垂直排列
+      &.el-form-item--inline {
+        display: block;
+        width: 100%;
+        
+        .el-form-item__content {
+          margin-left: 0 !important;
+        }
+      }
+    }
+    
+    // 表单按钮组
+    .form-actions {
+      position: sticky;
+      bottom: 0;
+      background: var(--bg-primary);
+      padding: var(--mobile-space-4);
+      margin: 0 calc(-1 * var(--mobile-space-4));
+      border-top: 1px solid var(--border-default);
+      display: flex;
+      gap: var(--mobile-space-3);
+      
+      .el-button {
+        flex: 1;
+        height: var(--mobile-touch-target);
+        font-size: var(--mobile-text-base);
+        font-weight: 600;
+      }
+    }
+  }
+  
+  // 按钮组件优化
+  .el-button {
+    min-height: var(--mobile-touch-target);
+    padding: 0 var(--mobile-space-4);
+    border-radius: var(--mobile-border-radius);
+    font-size: var(--mobile-text-base);
+    
+    &.is-circle {
+      width: var(--mobile-touch-target);
+      height: var(--mobile-touch-target);
+    }
+    
+    // 按钮组在移动端垂直排列
+    &-group {
+      flex-direction: column;
+      
+      .el-button {
+        width: 100%;
+        margin: 0;
+        margin-bottom: var(--mobile-space-2);
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        &:not(:first-child) {
+          border-radius: var(--mobile-border-radius);
+        }
+        
+        &:not(:last-child) {
+          border-radius: var(--mobile-border-radius);
+        }
+      }
+    }
+  }
+  
+  // 分页组件移动端优化
+  .el-pagination {
+    justify-content: center;
+    padding: var(--mobile-space-4);
+    
+    // 隐藏不必要的元素
+    .el-pagination__sizes,
+    .el-pagination__total {
+      display: none !important;
+    }
+    
+    // 只显示必要的按钮
+    .el-pagination__prev,
+    .el-pagination__next {
+      min-width: var(--mobile-touch-target);
+      height: var(--mobile-touch-target);
+    }
+    
+    .el-pager {
+      .number {
+        min-width: var(--mobile-touch-target);
+        height: var(--mobile-touch-target);
+        
+        // 在小屏幕上隐藏中间页码
+        &:not(.is-active):not(:first-child):not(:last-child) {
+          display: none;
+        }
+      }
+    }
+  }
+  
+  // 对话框移动端优化
+  .el-dialog {
+    width: 95% !important;
+    max-width: 500px;
+    margin: var(--mobile-space-4) auto !important;
+    border-radius: var(--mobile-border-radius);
+    
+    .el-dialog__header {
+      padding: var(--mobile-space-4);
+      border-bottom: 1px solid var(--border-light);
+    }
+    
+    .el-dialog__body {
+      padding: var(--mobile-space-4);
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    
+    .el-dialog__footer {
+      padding: var(--mobile-space-4);
+      border-top: 1px solid var(--border-light);
+      
+      .dialog-footer {
+        display: flex;
+        gap: var(--mobile-space-3);
+        
+        .el-button {
+          flex: 1;
+        }
+      }
+    }
+  }
+  
+  // 抽屉组件移动端优化
+  .el-drawer {
+    .el-drawer__header {
+      padding: var(--mobile-space-4);
+      border-bottom: 1px solid var(--border-light);
+    }
+    
+    .el-drawer__body {
+      padding: var(--mobile-space-4);
+    }
+  }
+  
+  // 消息提示优化
+  .el-message {
+    min-width: auto;
+    max-width: calc(100vw - 2 * var(--mobile-space-4));
+    margin: 0 var(--mobile-space-4);
+    border-radius: var(--mobile-border-radius);
+  }
+  
+  .el-notification {
+    width: calc(100vw - 2 * var(--mobile-space-4));
+    max-width: 400px;
+    margin: 0 var(--mobile-space-4);
+    border-radius: var(--mobile-border-radius);
+  }
+}
+
+// 四、移动端统计卡片优化
+// ======================
+
+@media (max-width: 768px) {
+  .metrics-section {
+    .metrics-grid {
+      grid-template-columns: 1fr !important;
+      gap: var(--mobile-space-3);
+      
+      .metric-card-wrapper {
+        .metric-card {
+          .metric-header {
+            .metric-icon-wrapper {
+              width: 40px;
+              height: 40px;
+              
+              .metric-icon {
+                font-size: 1.25rem;
+              }
+            }
+            
+            .metric-info {
+              .metric-title {
+                font-size: var(--mobile-text-sm);
+              }
+              
+              .metric-value {
+                font-size: var(--mobile-text-xl);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // 图表区域移动端优化
+  .charts-section,
+  .analytics-grid {
+    .chart-card {
+      .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--mobile-space-3);
+        
+        .chart-controls {
+          width: 100%;
+          
+          .el-radio-group {
+            width: 100%;
+            display: flex;
+            
+            .el-radio-button {
+              flex: 1;
+              text-align: center;
+            }
+          }
+        }
+      }
+      
+      .chart-content {
+        .chart-container {
+          height: 250px !important; // 移动端图表高度调整
+        }
+      }
+    }
+  }
+  
+  .analytics-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--mobile-space-4);
+  }
+}
+
+// 五、移动端辅助类
+// ================
+
+// 显示/隐藏工具类
+.mobile-only { display: none !important; }
+.desktop-only { display: block !important; }
+
+@media (max-width: 768px) {
+  .mobile-only { display: block !important; }
+  .desktop-only { display: none !important; }
+  
+  .mobile-flex { display: flex !important; }
+  .mobile-grid { display: grid !important; }
+  .mobile-inline-flex { display: inline-flex !important; }
+}
+
+// 文本大小工具类（移动端）
+@media (max-width: 768px) {
+  .mobile-text-xs { font-size: var(--mobile-text-xs) !important; }
+  .mobile-text-sm { font-size: var(--mobile-text-sm) !important; }
+  .mobile-text-base { font-size: var(--mobile-text-base) !important; }
+  .mobile-text-lg { font-size: var(--mobile-text-lg) !important; }
+  .mobile-text-xl { font-size: var(--mobile-text-xl) !important; }
+}
+
+// 间距工具类（移动端）
+@media (max-width: 768px) {
+  .mobile-p-0 { padding: 0 !important; }
+  .mobile-p-1 { padding: var(--mobile-space-1) !important; }
+  .mobile-p-2 { padding: var(--mobile-space-2) !important; }
+  .mobile-p-3 { padding: var(--mobile-space-3) !important; }
+  .mobile-p-4 { padding: var(--mobile-space-4) !important; }
+  
+  .mobile-m-0 { margin: 0 !important; }
+  .mobile-m-1 { margin: var(--mobile-space-1) !important; }
+  .mobile-m-2 { margin: var(--mobile-space-2) !important; }
+  .mobile-m-3 { margin: var(--mobile-space-3) !important; }
+  .mobile-m-4 { margin: var(--mobile-space-4) !important; }
+  
+  // 具体方向
+  .mobile-px-0 { padding-left: 0 !important; padding-right: 0 !important; }
+  .mobile-py-0 { padding-top: 0 !important; padding-bottom: 0 !important; }
+  .mobile-px-4 { padding-left: var(--mobile-space-4) !important; padding-right: var(--mobile-space-4) !important; }
+  .mobile-py-4 { padding-top: var(--mobile-space-4) !important; padding-bottom: var(--mobile-space-4) !important; }
+}
+
+// 宽度工具类（移动端）
+@media (max-width: 768px) {
+  .mobile-w-full { width: 100% !important; }
+  .mobile-w-auto { width: auto !important; }
+  .mobile-w-1\/2 { width: 50% !important; }
+  .mobile-w-1\/3 { width: 33.333333% !important; }
+  .mobile-w-2\/3 { width: 66.666667% !important; }
+  .mobile-w-1\/4 { width: 25% !important; }
+  .mobile-w-3\/4 { width: 75% !important; }
+}
+
+// 六、移动端滚动优化
+// ==================
+
+@media (max-width: 768px) {
+  // 平滑滚动
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  // 自定义滚动条（Webkit）
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 2px;
+    
+    &:hover {
+      background: var(--text-tertiary);
+    }
+  }
+  
+  // 表格水平滚动优化
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    
+    .el-table {
+      min-width: 600px; // 确保表格有最小宽度
+    }
+  }
+}
+
+// 七、移动端性能优化
+// ==================
+
+@media (max-width: 768px) {
+  // 减少阴影和动画以提升性能
+  .performance-mode {
+    * {
+      box-shadow: none !important;
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+  
+  // 图片优化
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  // 触摸优化
+  a,
+  button,
+  .clickable {
+    touch-action: manipulation; // 消除300ms点击延迟
+  }
+}
+
+// 八、移动端无障碍优化
+// ====================
+
+@media (max-width: 768px) {
+  // 增强焦点可见性
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus,
+  .el-button:focus,
+  .el-input:focus-within {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+  }
+  
+  // 增大可点击区域
+  .touch-target {
+    min-width: var(--mobile-touch-target);
+    min-height: var(--mobile-touch-target);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

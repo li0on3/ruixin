@@ -1,0 +1,155 @@
+// 增强版按钮样式修复 - 确保覆盖所有情况
+// ============================================
+
+// 核心修复：处理所有 text/link 类型按钮的对比度问题
+.el-button {
+  // 最高优先级的覆盖 - 处理 type="primary" text 等组合
+  &[type="primary"][text],
+  &[type="success"][text],
+  &[type="warning"][text],
+  &[type="danger"][text],
+  &[type="info"][text] {
+    background-color: transparent !important;
+    border-color: transparent !important;
+  }
+  
+  // Primary text 按钮
+  &[type="primary"][text],
+  &.el-button--primary.is-text,
+  &.el-button--primary[text] {
+    color: var(--primary-500) !important;
+    
+    &:not(.is-disabled):hover {
+      background-color: var(--primary-50) !important;
+      border-color: transparent !important;
+      color: var(--primary-600) !important;
+    }
+    
+    &:not(.is-disabled):focus {
+      color: var(--primary-600) !important;
+    }
+    
+    &:not(.is-disabled):active {
+      background-color: var(--primary-100) !important;
+      color: var(--primary-700) !important;
+    }
+  }
+  
+  // Success text 按钮
+  &[type="success"][text],
+  &.el-button--success.is-text,
+  &.el-button--success[text] {
+    color: var(--success-500) !important;
+    
+    &:not(.is-disabled):hover {
+      background-color: var(--success-50) !important;
+      border-color: transparent !important;
+      color: var(--success-600) !important;
+    }
+  }
+  
+  // Warning text 按钮
+  &[type="warning"][text],
+  &.el-button--warning.is-text,
+  &.el-button--warning[text] {
+    color: var(--warning-500) !important;
+    
+    &:not(.is-disabled):hover {
+      background-color: var(--warning-50) !important;
+      border-color: transparent !important;
+      color: var(--warning-600) !important;
+    }
+  }
+  
+  // Danger text 按钮
+  &[type="danger"][text],
+  &.el-button--danger.is-text,
+  &.el-button--danger[text] {
+    color: var(--error-500) !important;
+    
+    &:not(.is-disabled):hover {
+      background-color: var(--error-50) !important;
+      border-color: transparent !important;
+      color: var(--error-600) !important;
+    }
+  }
+  
+  // Info text 按钮
+  &[type="info"][text],
+  &.el-button--info.is-text,
+  &.el-button--info[text] {
+    color: var(--info-500) !important;
+    
+    &:not(.is-disabled):hover {
+      background-color: var(--info-50) !important;
+      border-color: transparent !important;
+      color: var(--info-600) !important;
+    }
+  }
+  
+  // Default text 按钮（无类型）
+  &[text]:not([type]),
+  &.is-text:not(.el-button--primary):not(.el-button--success):not(.el-button--warning):not(.el-button--danger):not(.el-button--info) {
+    color: var(--text-primary) !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    
+    &:not(.is-disabled):hover {
+      background-color: var(--gray-100) !important;
+      border-color: transparent !important;
+      color: var(--primary-500) !important;
+    }
+  }
+  
+  // Link 类型按钮（类似 text）
+  &.is-link,
+  &[link] {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    text-decoration: none !important;
+    
+    &.el-button--primary {
+      color: var(--primary-500) !important;
+      
+      &:not(.is-disabled):hover {
+        color: var(--primary-600) !important;
+        text-decoration: underline !important;
+      }
+    }
+  }
+}
+
+// 确保在深色主题下也正常工作
+[data-theme="dark"] {
+  .el-button {
+    &[type="primary"][text],
+    &.el-button--primary.is-text {
+      color: var(--primary-400) !important;
+      
+      &:not(.is-disabled):hover {
+        background-color: rgba(251, 146, 60, 0.1) !important;
+        color: var(--primary-300) !important;
+      }
+    }
+    
+    &[type="success"][text],
+    &.el-button--success.is-text {
+      color: var(--success-400) !important;
+      
+      &:not(.is-disabled):hover {
+        background-color: rgba(74, 222, 128, 0.1) !important;
+        color: var(--success-300) !important;
+      }
+    }
+    
+    &[type="danger"][text],
+    &.el-button--danger.is-text {
+      color: var(--error-400) !important;
+      
+      &:not(.is-disabled):hover {
+        background-color: rgba(239, 68, 68, 0.1) !important;
+        color: var(--error-300) !important;
+      }
+    }
+  }
+}

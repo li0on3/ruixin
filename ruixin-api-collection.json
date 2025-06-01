@@ -1,0 +1,2841 @@
+{
+  "info": {
+    "_postman_id": "ruixin-api-collection",
+    "name": "瑞幸咖啡管理系统 API",
+    "description": "瑞幸咖啡分销管理系统完整API文档，包含管理员端和分销商端所有接口",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "api_version",
+      "value": "v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "distributor_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "distributor_api_key",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "distributor_api_secret",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "管理员端 API",
+      "item": [
+        {
+          "name": "认证管理",
+          "item": [
+            {
+              "name": "管理员登录",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 200) {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.collectionVariables.set(\"admin_token\", jsonData.data.token);",
+                      "    pm.collectionVariables.set(\"token\", jsonData.data.token);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "login"]
+                },
+                "description": "管理员登录接口，成功后返回JWT token"
+              }
+            },
+            {
+              "name": "管理员登出",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/logout",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "logout"]
+                },
+                "description": "管理员登出接口"
+              }
+            },
+            {
+              "name": "获取当前用户信息",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/user/info",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "user", "info"]
+                },
+                "description": "获取当前登录管理员的详细信息"
+              }
+            },
+            {
+              "name": "修改密码",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"old_password\": \"admin123\",\n    \"new_password\": \"newPassword123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/user/password",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "user", "password"]
+                },
+                "description": "修改管理员密码"
+              }
+            }
+          ]
+        },
+        {
+          "name": "仪表盘",
+          "item": [
+            {
+              "name": "获取统计数据",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/dashboard/statistics",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "dashboard", "statistics"]
+                },
+                "description": "获取仪表盘总体统计数据"
+              }
+            },
+            {
+              "name": "获取订单趋势",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/dashboard/order-trend?dateRange=7",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "dashboard", "order-trend"],
+                  "query": [
+                    {
+                      "key": "dateRange",
+                      "value": "7",
+                      "description": "时间范围：7/30/90/week/month"
+                    }
+                  ]
+                },
+                "description": "获取指定时间范围的订单趋势数据"
+              }
+            },
+            {
+              "name": "获取热门商品",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/dashboard/hot-goods",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "dashboard", "hot-goods"]
+                },
+                "description": "获取前10个热门商品"
+              }
+            },
+            {
+              "name": "获取最新订单",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/dashboard/recent-orders",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "dashboard", "recent-orders"]
+                },
+                "description": "获取最新的10个订单"
+              }
+            }
+          ]
+        },
+        {
+          "name": "卡片管理",
+          "item": [
+            {
+              "name": "获取卡片列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards?page=1&page_size=20&status=1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "status",
+                      "value": "1",
+                      "description": "状态：0-未激活，1-正常，2-已使用，3-已过期，4-已作废"
+                    },
+                    {
+                      "key": "price_id",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "search",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "分页获取卡片列表，支持状态、价格ID和搜索筛选"
+              }
+            },
+            {
+              "name": "获取卡片详情",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "1"]
+                },
+                "description": "根据ID获取单个卡片详情"
+              }
+            },
+            {
+              "name": "创建卡片",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"card_code\": \"TEST123456\",\n    \"price_id\": 1,\n    \"cost_price\": 10.0,\n    \"sell_price\": 15.0,\n    \"expired_at\": \"2024-12-31T23:59:59Z\",\n    \"description\": \"测试卡片\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards"]
+                },
+                "description": "创建新的卡片"
+              }
+            },
+            {
+              "name": "更新卡片",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"status\": 1,\n    \"cost_price\": 12.0,\n    \"sell_price\": 18.0,\n    \"expired_at\": \"2025-12-31T23:59:59Z\",\n    \"description\": \"更新后的描述\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "1"]
+                },
+                "description": "更新卡片信息"
+              }
+            },
+            {
+              "name": "删除卡片",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "1"]
+                },
+                "description": "删除指定卡片"
+              }
+            },
+            {
+              "name": "获取卡片使用记录",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/1/usage-logs?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "1", "usage-logs"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "获取卡片的使用历史记录"
+              }
+            },
+            {
+              "name": "批量导入卡片",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"price_id\": 1,\n    \"cards\": [\n        {\n            \"card_code\": \"BATCH001\",\n            \"cost_price\": 10.0,\n            \"sell_price\": 15.0\n        },\n        {\n            \"card_code\": \"BATCH002\",\n            \"cost_price\": 10.0,\n            \"sell_price\": 15.0\n        }\n    ],\n    \"expired_at\": \"2024-12-31T23:59:59Z\",\n    \"description\": \"批量导入测试\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/batch-import",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "batch-import"]
+                },
+                "description": "批量导入卡片"
+              }
+            },
+            {
+              "name": "获取卡片统计",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/stats",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "stats"],
+                  "query": [
+                    {
+                      "key": "price_id",
+                      "value": "",
+                      "disabled": true,
+                      "description": "可选，指定价格ID"
+                    }
+                  ]
+                },
+                "description": "获取卡片统计数据或指定价格的卡片统计"
+              }
+            },
+            {
+              "name": "同步卡片商品",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/1/sync-products",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "1", "sync-products"]
+                },
+                "description": "同步指定卡片的可用商品信息"
+              }
+            },
+            {
+              "name": "验证单个卡片",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"card_code\": \"TEST123456\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/validate",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "validate"]
+                },
+                "description": "验证单个卡片的有效性并更新状态"
+              }
+            },
+            {
+              "name": "批量验证卡片",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/batch-validate",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "batch-validate"]
+                },
+                "description": "批量验证所有卡片"
+              }
+            },
+            {
+              "name": "启动批量验证任务",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"mode\": \"smart\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/batch-validation/start",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "batch-validation", "start"]
+                },
+                "description": "启动异步批量验证任务，支持全量验证(all)和智能验证(smart)模式"
+              }
+            },
+            {
+              "name": "获取验证进度",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/batch-validation/task123",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "batch-validation", "task123"]
+                },
+                "description": "获取批量验证任务的进度"
+              }
+            },
+            {
+              "name": "取消验证任务",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/batch-validation/task123",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "batch-validation", "task123"]
+                },
+                "description": "取消正在进行的验证任务"
+              }
+            },
+            {
+              "name": "获取验证统计信息",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/cards/validation-stats",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "cards", "validation-stats"]
+                },
+                "description": "获取卡片验证的统计信息"
+              }
+            }
+          ]
+        },
+        {
+          "name": "卡片批次管理",
+          "item": [
+            {
+              "name": "获取批次列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/card-batches?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "card-batches"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "获取卡片批次列表"
+              }
+            },
+            {
+              "name": "获取批次详情",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/card-batches/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "card-batches", "1"]
+                },
+                "description": "获取批次详细信息"
+              }
+            },
+            {
+              "name": "获取批次下的卡片",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/card-batches/1/cards?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "card-batches", "1", "cards"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "获取特定批次的所有卡片"
+              }
+            }
+          ]
+        },
+        {
+          "name": "分销商管理",
+          "item": [
+            {
+              "name": "获取分销商列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/distributors?page=1&page_size=20&status=1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "distributors"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "status",
+                      "value": "1",
+                      "description": "状态：1-正常，0-禁用"
+                    },
+                    {
+                      "key": "name",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "分页获取分销商列表"
+              }
+            },
+            {
+              "name": "获取分销商详情",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/distributors/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "distributors", "1"]
+                },
+                "description": "获取分销商详细信息，包含API密钥"
+              }
+            },
+            {
+              "name": "创建分销商",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"测试分销商\",\n    \"company_name\": \"测试公司\",\n    \"contact_name\": \"张三\",\n    \"phone\": \"13800138000\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"callback_url\": \"https://example.com/callback\",\n    \"credit_limit\": 10000.0,\n    \"daily_order_limit\": 100,\n    \"monthly_order_limit\": 3000\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/distributors",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "distributors"]
+                },
+                "description": "创建新的分销商账号"
+              }
+            },
+            {
+              "name": "更新分销商",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"更新后的名称\",\n    \"company_name\": \"更新后的公司名\",\n    \"status\": 1,\n    \"credit_limit\": 20000.0\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/distributors/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "distributors", "1"]
+                },
+                "description": "更新分销商信息"
+              }
+            },
+            {
+              "name": "删除分销商",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/distributors/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "distributors", "1"]
+                },
+                "description": "删除分销商"
+              }
+            },
+            {
+              "name": "重置API密钥",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/distributors/1/reset-api-key",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "distributors", "1", "reset-api-key"]
+                },
+                "description": "重新生成分销商的API密钥"
+              }
+            },
+            {
+              "name": "重置分销商密码",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"new_password\": \"newPassword123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/distributors/1/reset-password",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "distributors", "1", "reset-password"]
+                },
+                "description": "重置分销商登录密码"
+              }
+            },
+            {
+              "name": "获取API调用日志",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/distributors/1/api-logs?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "distributors", "1", "api-logs"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "获取分销商的API调用历史记录"
+              }
+            }
+          ]
+        },
+        {
+          "name": "订单管理",
+          "item": [
+            {
+              "name": "获取订单列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/orders?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "orders"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "distributor_id",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "disabled": true,
+                      "description": "订单状态"
+                    },
+                    {
+                      "key": "store_code",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "card_code",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "分页获取订单列表，支持多条件筛选"
+              }
+            },
+            {
+              "name": "获取订单详情",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/orders/ORD202401010001",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "orders", "ORD202401010001"]
+                },
+                "description": "获取指定订单的详细信息"
+              }
+            },
+            {
+              "name": "刷新订单状态",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/orders/ORD202401010001/refresh",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "orders", "ORD202401010001", "refresh"]
+                },
+                "description": "从瑞幸系统刷新订单状态"
+              }
+            },
+            {
+              "name": "生成订单二维码",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/orders/ORD202401010001/qrcode",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "orders", "ORD202401010001", "qrcode"]
+                },
+                "description": "生成订单的取货二维码"
+              }
+            },
+            {
+              "name": "获取订单统计",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/orders/statistics?start_date=2024-01-01&end_date=2024-01-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "orders", "statistics"],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2024-01-31"
+                    },
+                    {
+                      "key": "distributor_id",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "获取指定时间范围内的订单统计数据"
+              }
+            }
+          ]
+        },
+        {
+          "name": "财务管理",
+          "item": [
+            {
+              "name": "充值",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"distributor_id\": 1,\n    \"amount\": 1000.0,\n    \"remark\": \"管理员充值\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/finance/recharge",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "finance", "recharge"]
+                },
+                "description": "为分销商充值"
+              }
+            },
+            {
+              "name": "余额调整",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"distributor_id\": 1,\n    \"amount\": -50.0,\n    \"remark\": \"余额调整：退款\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/finance/adjust",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "finance", "adjust"]
+                },
+                "description": "调整分销商余额（正负均可）"
+              }
+            },
+            {
+              "name": "获取交易记录列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/finance/transactions?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "finance", "transactions"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "distributor_id",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "type",
+                      "value": "",
+                      "disabled": true,
+                      "description": "交易类型"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "获取所有交易记录"
+              }
+            },
+            {
+              "name": "获取提现申请列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/finance/withdrawals?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "finance", "withdrawals"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "distributor_id",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "disabled": true,
+                      "description": "状态：pending/approved/rejected"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "获取提现申请列表"
+              }
+            },
+            {
+              "name": "获取待处理的提现申请",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/finance/withdrawals/pending?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "finance", "withdrawals", "pending"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "获取待审核的提现申请"
+              }
+            },
+            {
+              "name": "处理提现申请",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"approved\": true,\n    \"reject_reason\": \"\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/finance/withdrawals/1/process",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "finance", "withdrawals", "1", "process"]
+                },
+                "description": "批准或拒绝提现申请"
+              }
+            },
+            {
+              "name": "获取财务统计",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/finance/statistics",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "finance", "statistics"]
+                },
+                "description": "获取财务总体统计数据"
+              }
+            },
+            {
+              "name": "获取分销商余额",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/finance/distributors/1/balance",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "finance", "distributors", "1", "balance"]
+                },
+                "description": "获取指定分销商的余额信息"
+              }
+            },
+            {
+              "name": "获取利润报表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/finance/profit-report?start_date=2024-01-01&end_date=2024-01-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "finance", "profit-report"],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2024-01-31"
+                    }
+                  ]
+                },
+                "description": "获取指定时间范围的利润报表"
+              }
+            }
+          ]
+        },
+        {
+          "name": "瑞幸配置管理",
+          "item": [
+            {
+              "name": "获取价格列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/luckin/prices?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "luckin", "prices"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "分页获取价格配置列表"
+              }
+            },
+            {
+              "name": "创建价格",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"price_id\": \"PRICE_001\",\n    \"price_value\": 15.0,\n    \"status\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/luckin/prices",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "luckin", "prices"]
+                },
+                "description": "创建新的价格配置"
+              }
+            },
+            {
+              "name": "更新价格",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"price_value\": 18.0,\n    \"status\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/luckin/prices/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "luckin", "prices", "1"]
+                },
+                "description": "更新价格配置"
+              }
+            },
+            {
+              "name": "删除价格",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/luckin/prices/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "luckin", "prices", "1"]
+                },
+                "description": "删除价格配置"
+              }
+            },
+            {
+              "name": "获取产品列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/luckin/products?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "luckin", "products"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "name",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "category",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "获取瑞幸产品列表"
+              }
+            },
+            {
+              "name": "批量导入产品",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"products\": [\n        {\n            \"product_id\": \"PROD_001\",\n            \"name\": \"拿铁咖啡\",\n            \"description\": \"经典拿铁\",\n            \"category\": \"咖啡\",\n            \"image_url\": \"https://example.com/latte.jpg\"\n        },\n        {\n            \"product_id\": \"PROD_002\",\n            \"name\": \"美式咖啡\",\n            \"description\": \"经典美式\",\n            \"category\": \"咖啡\",\n            \"image_url\": \"https://example.com/americano.jpg\"\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/luckin/products/import",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "luckin", "products", "import"]
+                },
+                "description": "批量导入产品数据"
+              }
+            },
+            {
+              "name": "获取有效选项",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/luckin/active-options",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "luckin", "active-options"]
+                },
+                "description": "获取有效的价格和产品选项（用于下拉框）"
+              }
+            }
+          ]
+        },
+        {
+          "name": "商品管理",
+          "item": [
+            {
+              "name": "获取商品列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/products?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "products"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "search",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "card_id",
+                      "value": "",
+                      "disabled": true,
+                      "description": "指定卡片ID获取绑定的产品"
+                    }
+                  ]
+                },
+                "description": "获取商品列表或指定卡片绑定的产品"
+              }
+            },
+            {
+              "name": "搜索商品",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/products/search?keyword=拿铁",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "products", "search"],
+                  "query": [
+                    {
+                      "key": "keyword",
+                      "value": "拿铁"
+                    }
+                  ]
+                },
+                "description": "根据关键词搜索商品"
+              }
+            },
+            {
+              "name": "根据商品代码批量获取商品信息",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"codes\": \"GOODS001,GOODS002,GOODS003\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/products/by-codes",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "products", "by-codes"]
+                },
+                "description": "批量获取商品信息"
+              }
+            },
+            {
+              "name": "同步商品信息",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"store_code\": \"STORE001\",\n    \"card_code\": \"CARD001\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/products/sync",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "products", "sync"]
+                },
+                "description": "从瑞幸系统同步商品信息"
+              }
+            },
+            {
+              "name": "获取匹配失败日志",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/products/match-logs?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "products", "match-logs"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "distributor_id",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "获取商品匹配失败的日志记录"
+              }
+            },
+            {
+              "name": "解析规格代码",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"goods_code\": \"GOODS001\",\n    \"sku_code\": \"SKU001\",\n    \"specs_code\": \"HOT_LARGE_SUGAR\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/products/parse-specs",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "products", "parse-specs"]
+                },
+                "description": "解析商品规格代码为具体规格项"
+              }
+            },
+            {
+              "name": "获取产品的卡片绑定详情",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/products/cards?goods_code=GOODS001",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "products", "cards"],
+                  "query": [
+                    {
+                      "key": "goods_code",
+                      "value": "GOODS001"
+                    }
+                  ]
+                },
+                "description": "获取指定产品的所有卡片绑定信息"
+              }
+            }
+          ]
+        },
+        {
+          "name": "统计分析",
+          "item": [
+            {
+              "name": "获取核心指标",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/statistics/metrics?start_date=2024-01-01&end_date=2024-01-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "statistics", "metrics"],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2024-01-31"
+                    }
+                  ]
+                },
+                "description": "获取指定时间范围的核心业务指标"
+              }
+            },
+            {
+              "name": "获取销售趋势",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/statistics/sales-trend?start_date=2024-01-01&end_date=2024-01-31&type=both",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "statistics", "sales-trend"],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2024-01-31"
+                    },
+                    {
+                      "key": "type",
+                      "value": "both",
+                      "description": "类型：both/revenue/quantity"
+                    }
+                  ]
+                },
+                "description": "获取销售趋势数据"
+              }
+            },
+            {
+              "name": "获取分销商排行",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/statistics/distributor-rank?start_date=2024-01-01&end_date=2024-01-31&type=revenue&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "statistics", "distributor-rank"],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2024-01-31"
+                    },
+                    {
+                      "key": "type",
+                      "value": "revenue",
+                      "description": "排行类型：revenue/quantity"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                },
+                "description": "获取分销商销售排行榜"
+              }
+            },
+            {
+              "name": "获取商品分析",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/statistics/product-analysis?start_date=2024-01-01&end_date=2024-01-31&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "statistics", "product-analysis"],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2024-01-31"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                },
+                "description": "获取商品销售分析数据"
+              }
+            },
+            {
+              "name": "获取时段分布",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/statistics/hour-distribution?start_date=2024-01-01&end_date=2024-01-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "statistics", "hour-distribution"],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2024-01-31"
+                    }
+                  ]
+                },
+                "description": "获取订单时段分布数据"
+              }
+            },
+            {
+              "name": "获取地区分布",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/statistics/region-distribution?start_date=2024-01-01&end_date=2024-01-31",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "statistics", "region-distribution"],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2024-01-31"
+                    }
+                  ]
+                },
+                "description": "获取订单地区分布数据"
+              }
+            },
+            {
+              "name": "获取详细数据",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/statistics/details?start_date=2024-01-01&end_date=2024-01-31&type=daily",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "statistics", "details"],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2024-01-31"
+                    },
+                    {
+                      "key": "type",
+                      "value": "daily",
+                      "description": "数据类型：daily/weekly/monthly"
+                    }
+                  ]
+                },
+                "description": "获取详细统计数据"
+              }
+            },
+            {
+              "name": "导出数据",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/statistics/export?start_date=2024-01-01&end_date=2024-01-31&format=excel",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "statistics", "export"],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2024-01-01"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2024-01-31"
+                    },
+                    {
+                      "key": "format",
+                      "value": "excel",
+                      "description": "导出格式：excel/csv"
+                    }
+                  ]
+                },
+                "description": "导出统计数据（功能待实现）"
+              }
+            }
+          ]
+        },
+        {
+          "name": "系统配置",
+          "item": [
+            {
+              "name": "获取系统配置",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/system/configs",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "system", "configs"]
+                },
+                "description": "获取所有系统配置，包括安全配置的默认值"
+              }
+            },
+            {
+              "name": "更新系统配置",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"max_validation_workers\": \"10\",\n    \"validation_timeout\": \"30\",\n    \"batch_validation_enabled\": \"true\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/system/configs",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "system", "configs"]
+                },
+                "description": "更新系统配置项"
+              }
+            },
+            {
+              "name": "获取店铺代码配置",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/system/store-code",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "system", "store-code"]
+                },
+                "description": "获取同步用的店铺代码"
+              }
+            },
+            {
+              "name": "更新店铺代码配置",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"store_code\": \"STORE001\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/system/store-code",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "system", "store-code"]
+                },
+                "description": "更新店铺代码配置"
+              }
+            }
+          ]
+        },
+        {
+          "name": "店铺查询",
+          "item": [
+            {
+              "name": "搜索店铺",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/stores/search?page=1&page_size=20&city_id=1&keyword=星巴克",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "stores", "search"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "city_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "keyword",
+                      "value": "星巴克"
+                    },
+                    {
+                      "key": "longitude",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "latitude",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "管理员搜索店铺，支持位置和关键词搜索"
+              }
+            },
+            {
+              "name": "获取城市列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/stores/cities",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "stores", "cities"]
+                },
+                "description": "获取所有城市列表"
+              }
+            },
+            {
+              "name": "获取热门店铺",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/stores/hot",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "stores", "hot"]
+                },
+                "description": "获取预设的热门店铺列表"
+              }
+            },
+            {
+              "name": "同步城市列表",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"card_code\": \"CARD001\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/stores/sync-cities",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "stores", "sync-cities"]
+                },
+                "description": "同步更新城市数据，支持自动获取卡片或手动指定"
+              }
+            }
+          ]
+        },
+        {
+          "name": "可用商品查询",
+          "item": [
+            {
+              "name": "获取管理员可用商品列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/admin/available-products",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "admin", "available-products"]
+                },
+                "description": "管理员获取系统中所有可下单的商品信息"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "分销商端 API",
+      "item": [
+        {
+          "name": "认证管理",
+          "item": [
+            {
+              "name": "分销商登录",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 200) {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.collectionVariables.set(\"distributor_token\", jsonData.data.token);",
+                      "    pm.collectionVariables.set(\"token\", jsonData.data.token);",
+                      "    if (jsonData.data.distributor.api_key) {",
+                      "        pm.collectionVariables.set(\"distributor_api_key\", jsonData.data.distributor.api_key);",
+                      "        pm.collectionVariables.set(\"distributor_api_secret\", jsonData.data.distributor.api_secret);",
+                      "    }",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"distributor@example.com\",\n    \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "login"]
+                },
+                "description": "分销商登录接口，成功后返回JWT token和API密钥"
+              }
+            },
+            {
+              "name": "分销商登出",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{distributor_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/logout",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "logout"]
+                },
+                "description": "分销商登出接口"
+              }
+            },
+            {
+              "name": "获取分销商信息",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{distributor_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/profile",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "profile"]
+                },
+                "description": "获取当前分销商的详细信息"
+              }
+            },
+            {
+              "name": "修改密码",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{distributor_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"old_password\": \"password123\",\n    \"new_password\": \"newPassword123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/password",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "password"]
+                },
+                "description": "修改分销商密码"
+              }
+            }
+          ]
+        },
+        {
+          "name": "订单管理（API Key认证）",
+          "auth": {
+            "type": "apikey",
+            "apikey": [
+              {
+                "key": "value",
+                "value": "{{distributor_api_key}}",
+                "type": "string"
+              },
+              {
+                "key": "key",
+                "value": "X-API-Key",
+                "type": "string"
+              }
+            ]
+          },
+          "item": [
+            {
+              "name": "创建订单",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"card\": \"CARD001\",\n    \"goods\": [\n        {\n            \"good_code\": \"GOODS001\",\n            \"good_name\": \"拿铁咖啡\",\n            \"specs_code\": \"HOT_LARGE\",\n            \"price\": 25.0,\n            \"num\": 1\n        }\n    ],\n    \"store_code\": \"STORE001\",\n    \"mobile\": \"13800138000\",\n    \"take_time\": \"立即自取\",\n    \"outer_order_no\": \"TEST_ORDER_001\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/order",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "order"]
+                },
+                "description": "创建新订单"
+              }
+            },
+            {
+              "name": "创建简化订单",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"card\": \"CARD001\",\n    \"goods_list\": [\n        {\n            \"goods_code\": \"GOODS001\",\n            \"sku_code\": \"SKU001\",\n            \"specs_code\": \"HOT_LARGE\",\n            \"num\": 1\n        }\n    ],\n    \"store_code\": \"STORE001\",\n    \"mobile\": \"13800138000\",\n    \"outer_order_no\": \"SIMPLE_ORDER_001\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/order/simplified",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "order", "simplified"]
+                },
+                "description": "使用简化参数创建订单"
+              }
+            },
+            {
+              "name": "批量创建订单",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"orders\": [\n        {\n            \"card\": \"CARD001\",\n            \"goods\": [\n                {\n                    \"good_code\": \"GOODS001\",\n                    \"good_name\": \"拿铁咖啡\",\n                    \"specs_code\": \"HOT_LARGE\",\n                    \"price\": 25.0,\n                    \"num\": 1\n                }\n            ],\n            \"store_code\": \"STORE001\",\n            \"mobile\": \"13800138000\",\n            \"take_time\": \"立即自取\",\n            \"outer_order_no\": \"BATCH_ORDER_001\"\n        },\n        {\n            \"card\": \"CARD002\",\n            \"goods\": [\n                {\n                    \"good_code\": \"GOODS002\",\n                    \"good_name\": \"美式咖啡\",\n                    \"specs_code\": \"ICE_LARGE\",\n                    \"price\": 22.0,\n                    \"num\": 1\n                }\n            ],\n            \"store_code\": \"STORE001\",\n            \"mobile\": \"13800138001\",\n            \"take_time\": \"立即自取\",\n            \"outer_order_no\": \"BATCH_ORDER_002\"\n        }\n    ]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/orders/batch",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "orders", "batch"]
+                },
+                "description": "批量创建订单，最多10个"
+              }
+            },
+            {
+              "name": "查询订单状态",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/order/ORD202401010001",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "order", "ORD202401010001"]
+                },
+                "description": "查询指定订单的状态"
+              }
+            }
+          ]
+        },
+        {
+          "name": "店铺和商品查询（API Key认证）",
+          "auth": {
+            "type": "apikey",
+            "apikey": [
+              {
+                "key": "value",
+                "value": "{{distributor_api_key}}",
+                "type": "string"
+              },
+              {
+                "key": "key",
+                "value": "X-API-Key",
+                "type": "string"
+              }
+            ]
+          },
+          "item": [
+            {
+              "name": "搜索门店",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/stores?card=CARD001&city_name=北京&keywords=朝阳",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "stores"],
+                  "query": [
+                    {
+                      "key": "card",
+                      "value": "CARD001"
+                    },
+                    {
+                      "key": "city_id",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "city_name",
+                      "value": "北京"
+                    },
+                    {
+                      "key": "keywords",
+                      "value": "朝阳"
+                    }
+                  ]
+                },
+                "description": "根据卡片和条件搜索门店"
+              }
+            },
+            {
+              "name": "获取门店菜单",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/menu?card=CARD001&store_code=STORE001",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "menu"],
+                  "query": [
+                    {
+                      "key": "card",
+                      "value": "CARD001"
+                    },
+                    {
+                      "key": "store_code",
+                      "value": "STORE001"
+                    }
+                  ]
+                },
+                "description": "获取指定门店的商品菜单"
+              }
+            },
+            {
+              "name": "获取商品详情",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/goods?card=CARD001&store_code=STORE001&goods_code=GOODS001",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "goods"],
+                  "query": [
+                    {
+                      "key": "card",
+                      "value": "CARD001"
+                    },
+                    {
+                      "key": "store_code",
+                      "value": "STORE001"
+                    },
+                    {
+                      "key": "goods_code",
+                      "value": "GOODS001"
+                    }
+                  ]
+                },
+                "description": "获取指定商品的详细信息"
+              }
+            },
+            {
+              "name": "获取城市列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/cities",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "cities"]
+                },
+                "description": "获取所有支持的城市列表"
+              }
+            },
+            {
+              "name": "同步城市数据",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/cities/sync?card=CARD001",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "cities", "sync"],
+                  "query": [
+                    {
+                      "key": "card",
+                      "value": "CARD001"
+                    }
+                  ]
+                },
+                "description": "同步更新城市数据"
+              }
+            },
+            {
+              "name": "获取可用商品列表",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/available-products",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "available-products"]
+                },
+                "description": "获取当前分销商可下单的商品信息，包含中文名称和编码"
+              }
+            }
+          ]
+        },
+        {
+          "name": "财务管理（API Key认证）",
+          "auth": {
+            "type": "apikey",
+            "apikey": [
+              {
+                "key": "value",
+                "value": "{{distributor_api_key}}",
+                "type": "string"
+              },
+              {
+                "key": "key",
+                "value": "X-API-Key",
+                "type": "string"
+              }
+            ]
+          },
+          "item": [
+            {
+              "name": "获取余额信息",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/balance",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "balance"]
+                },
+                "description": "获取当前分销商的余额信息"
+              }
+            },
+            {
+              "name": "获取交易记录",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/transactions?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "transactions"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "获取分销商自己的交易记录"
+              }
+            },
+            {
+              "name": "创建提现申请",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"amount\": 1000.0,\n    \"account_info\": {\n        \"type\": \"bank\",\n        \"account_name\": \"张三\",\n        \"account_no\": \"6222021234567890123\",\n        \"bank_name\": \"工商银行\",\n        \"bank_branch\": \"北京朝阳支行\"\n    },\n    \"remark\": \"月度提现\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/withdrawal",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "withdrawal"]
+                },
+                "description": "提交提现申请"
+              }
+            },
+            {
+              "name": "获取提现记录",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/withdrawals?page=1&page_size=20",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "withdrawals"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "获取分销商自己的提现记录"
+              }
+            },
+            {
+              "name": "更新预警设置",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "X-API-Key",
+                    "value": "{{distributor_api_key}}"
+                  },
+                  {
+                    "key": "X-API-Secret",
+                    "value": "{{distributor_api_secret}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"warning_balance\": 1000.0,\n    \"warning_enabled\": true,\n    \"warning_email\": \"alert@example.com\",\n    \"warning_webhook\": \"https://example.com/webhook/balance-warning\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/{{api_version}}/distributor/warning-settings",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "{{api_version}}", "distributor", "warning-settings"]
+                },
+                "description": "更新余额预警设置"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,770 @@
+// 瑞幸分销系统设计Token系统
+// ============================================
+
+// 颜色系统
+// ----------------------------------------
+
+// 主色调 - 瑞幸品牌橙色
+:root {
+  // 主色系
+  --primary-50: #fff7ed;
+  --primary-100: #ffedd5;
+  --primary-200: #fed7aa;
+  --primary-300: #fdba74;
+  --primary-400: #fb923c;
+  --primary-500: #f97316; // 主橙色
+  --primary-600: #ea580c;
+  --primary-700: #c2410c;
+  --primary-800: #9a3412;
+  --primary-900: #7c2d12;
+  --primary-950: #431407;
+
+  // 辅助色系 - 深蓝色
+  --secondary-50: #f8fafc;
+  --secondary-100: #f1f5f9;
+  --secondary-200: #e2e8f0;
+  --secondary-300: #cbd5e1;
+  --secondary-400: #94a3b8;
+  --secondary-500: #64748b;
+  --secondary-600: #475569;
+  --secondary-700: #334155;
+  --secondary-800: #1e293b;
+  --secondary-900: #0f172a;
+  --secondary-950: #020617;
+
+  // 功能色系
+  --success-50: #f0fdf4;
+  --success-100: #dcfce7;
+  --success-200: #bbf7d0;
+  --success-300: #86efac;
+  --success-400: #4ade80;
+  --success-500: #22c55e;
+  --success-600: #16a34a;
+  --success-700: #15803d;
+  --success-800: #166534;
+  --success-900: #14532d;
+
+  --warning-50: #fffbeb;
+  --warning-100: #fef3c7;
+  --warning-200: #fde68a;
+  --warning-300: #fcd34d;
+  --warning-400: #fbbf24;
+  --warning-500: #f59e0b;
+  --warning-600: #d97706;
+  --warning-700: #b45309;
+  --warning-800: #92400e;
+  --warning-900: #78350f;
+
+  --error-50: #fef2f2;
+  --error-100: #fee2e2;
+  --error-200: #fecaca;
+  --error-300: #fca5a5;
+  --error-400: #f87171;
+  --error-500: #ef4444;
+  --error-600: #dc2626;
+  --error-700: #b91c1c;
+  --error-800: #991b1b;
+  --error-900: #7f1d1d;
+
+  --info-50: #eff6ff;
+  --info-100: #dbeafe;
+  --info-200: #bfdbfe;
+  --info-300: #93c5fd;
+  --info-400: #60a5fa;
+  --info-500: #3b82f6;
+  --info-600: #2563eb;
+  --info-700: #1d4ed8;
+  --info-800: #1e40af;
+  --info-900: #1e3a8a;
+
+  // RGB 值（用于透明度计算）
+  --primary-rgb: 249, 115, 22;
+  --secondary-rgb: 100, 116, 139;
+  --success-rgb: 34, 197, 94;
+  --warning-rgb: 245, 158, 11;
+  --error-rgb: 239, 68, 68;
+  --info-rgb: 59, 130, 246;
+
+  // 语义化颜色变量
+  --color-primary: var(--primary-500);
+  --color-secondary: var(--secondary-500);
+  --color-success: var(--success-500);
+  --color-warning: var(--warning-500);
+  --color-error: var(--error-500);
+  --color-info: var(--info-500);
+
+  // 背景色系统
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-hover: rgba(var(--primary-rgb), 0.04);
+  --bg-active: rgba(var(--primary-rgb), 0.08);
+  --bg-disabled: #f1f5f9;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+
+  // 文本色系统
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-quaternary: #94a3b8;
+  --text-disabled: #cbd5e1;
+  --text-inverse: #ffffff;
+  --text-link: var(--primary-600);
+  --text-link-hover: var(--primary-700);
+
+  // 边框色系统
+  --border-light: #e2e8f0;
+  --border-default: #cbd5e1;
+  --border-strong: #94a3b8;
+  --border-inverse: #475569;
+  --border-focus: var(--primary-500);
+  --border-error: var(--error-500);
+  --border-success: var(--success-500);
+
+  // 阴影系统
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --shadow-focus: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+
+  // 渐变系统
+  --gradient-primary: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  --gradient-secondary: linear-gradient(135deg, var(--secondary-500), var(--secondary-600));
+  --gradient-success: linear-gradient(135deg, var(--success-500), var(--success-600));
+  --gradient-warning: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+  --gradient-error: linear-gradient(135deg, var(--error-500), var(--error-600));
+  --gradient-info: linear-gradient(135deg, var(--info-500), var(--info-600));
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+
+  // Z-index 层级系统
+  --z-hide: -1;
+  --z-base: 0;
+  --z-docked: 10;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-banner: 1200;
+  --z-overlay: 1300;
+  --z-modal: 1400;
+  --z-popover: 1500;
+  --z-skiplink: 1600;
+  --z-toast: 1700;
+  --z-tooltip: 1800;
+
+  // 空间系统（基于 4px 的倍数）
+  --spacing-0: 0;
+  --spacing-px: 1px;
+  --spacing-0_5: 0.125rem; // 2px
+  --spacing-1: 0.25rem;    // 4px
+  --spacing-1_5: 0.375rem; // 6px
+  --spacing-2: 0.5rem;     // 8px
+  --spacing-2_5: 0.625rem; // 10px
+  --spacing-3: 0.75rem;    // 12px
+  --spacing-3_5: 0.875rem; // 14px
+  --spacing-4: 1rem;       // 16px
+  --spacing-5: 1.25rem;    // 20px
+  --spacing-6: 1.5rem;     // 24px
+  --spacing-7: 1.75rem;    // 28px
+  --spacing-8: 2rem;       // 32px
+  --spacing-9: 2.25rem;    // 36px
+  --spacing-10: 2.5rem;    // 40px
+  --spacing-11: 2.75rem;   // 44px
+  --spacing-12: 3rem;      // 48px
+  --spacing-14: 3.5rem;    // 56px
+  --spacing-16: 4rem;      // 64px
+  --spacing-20: 5rem;      // 80px
+  --spacing-24: 6rem;      // 96px
+  --spacing-28: 7rem;      // 112px
+  --spacing-32: 8rem;      // 128px
+  --spacing-36: 9rem;      // 144px
+  --spacing-40: 10rem;     // 160px
+  --spacing-44: 11rem;     // 176px
+  --spacing-48: 12rem;     // 192px
+  --spacing-52: 13rem;     // 208px
+  --spacing-56: 14rem;     // 224px
+  --spacing-60: 15rem;     // 240px
+  --spacing-64: 16rem;     // 256px
+  --spacing-72: 18rem;     // 288px
+  --spacing-80: 20rem;     // 320px
+  --spacing-96: 24rem;     // 384px
+
+  // 字体系统
+  --font-family-sans: 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', 'Source Han Sans SC', 'Noto Sans CJK SC', 'WenQuanYi Micro Hei', sans-serif;
+  --font-family-serif: 'Times New Roman', 'Songti SC', serif;
+  --font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+
+  // 字重系统
+  --font-thin: 100;
+  --font-extralight: 200;
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+  --font-black: 900;
+
+  // 字号系统
+  --text-xs: 0.75rem;      // 12px
+  --text-sm: 0.875rem;     // 14px
+  --text-base: 1rem;       // 16px
+  --text-lg: 1.125rem;     // 18px
+  --text-xl: 1.25rem;      // 20px
+  --text-2xl: 1.5rem;      // 24px
+  --text-3xl: 1.875rem;    // 30px
+  --text-4xl: 2.25rem;     // 36px
+  --text-5xl: 3rem;        // 48px
+  --text-6xl: 3.75rem;     // 60px
+  --text-7xl: 4.5rem;      // 72px
+  --text-8xl: 6rem;        // 96px
+  --text-9xl: 8rem;        // 128px
+
+  // 行高系统
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  // 圆角系统
+  --radius-none: 0;
+  --radius-sm: 0.125rem;   // 2px
+  --radius-md: 0.375rem;   // 6px
+  --radius-lg: 0.5rem;     // 8px
+  --radius-xl: 0.75rem;    // 12px
+  --radius-2xl: 1rem;      // 16px
+  --radius-3xl: 1.5rem;    // 24px
+  --radius-full: 9999px;
+
+  // 过渡动画系统
+  --transition-instant: 75ms;
+  --transition-fast: 150ms;
+  --transition-base: 200ms;
+  --transition-slow: 300ms;
+  --transition-slower: 500ms;
+
+  // 缓动函数
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  // 断点系统（用于 JS 中的响应式判断）
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  // 容器最大宽度
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+
+  // 表单控件尺寸
+  --form-height-sm: 2rem;     // 32px
+  --form-height-md: 2.5rem;   // 40px
+  --form-height-lg: 3rem;     // 48px
+  --form-height-xl: 3.5rem;   // 56px
+
+  // 图标尺寸
+  --icon-xs: 0.75rem;  // 12px
+  --icon-sm: 1rem;     // 16px
+  --icon-md: 1.25rem;  // 20px
+  --icon-lg: 1.5rem;   // 24px
+  --icon-xl: 2rem;     // 32px
+  --icon-2xl: 2.5rem;  // 40px
+  --icon-3xl: 3rem;    // 48px
+
+  // 表格相关
+  --table-row-height: 3rem;
+  --table-header-height: 3.5rem;
+  --table-cell-padding-x: 1rem;
+  --table-cell-padding-y: 0.75rem;
+
+  // 侧边栏相关
+  --sidebar-width-collapsed: 4rem;    // 64px
+  --sidebar-width-expanded: 16rem;    // 256px
+  --sidebar-width-wide: 20rem;        // 320px
+
+  // 头部导航相关
+  --header-height: 4rem;     // 64px
+  --header-height-sm: 3rem;  // 48px
+
+  // 性能相关
+  --gpu-acceleration: translate3d(0, 0, 0);
+}
+
+// ============================================================================
+// 暗色主题
+// ============================================================================
+
+[data-theme="dark"] {
+  // 背景色系统 - 暗色模式
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-hover: rgba(var(--primary-rgb), 0.08);
+  --bg-active: rgba(var(--primary-rgb), 0.12);
+  --bg-disabled: #374151;
+  --bg-overlay: rgba(0, 0, 0, 0.8);
+
+  // 文本色系统 - 暗色模式
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-quaternary: #64748b;
+  --text-disabled: #475569;
+  --text-inverse: #0f172a;
+  --text-link: var(--primary-400);
+  --text-link-hover: var(--primary-300);
+
+  // 边框色系统 - 暗色模式
+  --border-light: #374151;
+  --border-default: #4b5563;
+  --border-strong: #6b7280;
+  --border-inverse: #d1d5db;
+  --border-focus: var(--primary-400);
+  --border-error: var(--error-400);
+  --border-success: var(--success-400);
+
+  // 阴影系统 - 暗色模式
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+  --shadow-focus: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
+
+  // 渐变系统 - 暗色模式
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+
+  // 调整主色调在暗色模式下的亮度
+  --color-primary: var(--primary-400);
+  --color-secondary: var(--secondary-400);
+  --color-success: var(--success-400);
+  --color-warning: var(--warning-400);
+  --color-error: var(--error-400);
+  --color-info: var(--info-400);
+}
+
+// ============================================================================
+// 高对比度主题（无障碍支持）
+// ============================================================================
+
+[data-theme="high-contrast"] {
+  --bg-primary: #000000;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #333333;
+  --bg-hover: #404040;
+  --bg-active: #4d4d4d;
+
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-tertiary: #cccccc;
+  --text-link: #66b3ff;
+  --text-link-hover: #99ccff;
+
+  --border-light: #666666;
+  --border-default: #808080;
+  --border-strong: #b3b3b3;
+  --border-focus: #ffff00;
+
+  --primary-500: #ff6600;
+  --success-500: #00cc00;
+  --warning-500: #ffcc00;
+  --error-500: #ff3333;
+  --info-500: #0099ff;
+}
+
+// ============================================================================
+// 系统偏好设置自适应
+// ============================================================================
+
+// 跟随系统偏好的暗色模式
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] {
+    // 继承暗色主题变量
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --bg-hover: rgba(var(--primary-rgb), 0.08);
+    --bg-active: rgba(var(--primary-rgb), 0.12);
+    --bg-disabled: #374151;
+    --bg-overlay: rgba(0, 0, 0, 0.8);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --text-quaternary: #64748b;
+    --text-disabled: #475569;
+    --text-inverse: #0f172a;
+    --text-link: var(--primary-400);
+    --text-link-hover: var(--primary-300);
+
+    --border-light: #374151;
+    --border-default: #4b5563;
+    --border-strong: #6b7280;
+    --border-inverse: #d1d5db;
+    --border-focus: var(--primary-400);
+
+    --color-primary: var(--primary-400);
+    --color-secondary: var(--secondary-400);
+    --color-success: var(--success-400);
+    --color-warning: var(--warning-400);
+    --color-error: var(--error-400);
+    --color-info: var(--info-400);
+  }
+}
+
+// 跟随系统偏好的对比度
+@media (prefers-contrast: high) {
+  :root {
+    --border-light: #000000;
+    --border-default: #000000;
+    --text-tertiary: var(--text-secondary);
+    --text-quaternary: var(--text-secondary);
+  }
+}
+
+// 跟随系统偏好的动画设置
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-instant: 0ms;
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+    --transition-slower: 0ms;
+  }
+}
+
+// ============================================================================
+// 响应式断点 Mixins（在 SCSS 中使用）
+// ============================================================================
+
+// 媒体查询 Mixins
+@mixin mobile-only {
+  @media (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin tablet-only {
+  @media (min-width: 768px) and (max-width: 1023px) {
+    @content;
+  }
+}
+
+@mixin desktop-only {
+  @media (min-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin mobile-and-tablet {
+  @media (max-width: 1023px) {
+    @content;
+  }
+}
+
+@mixin tablet-and-desktop {
+  @media (min-width: 768px) {
+    @content;
+  }
+}
+
+// 自定义断点
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == xs {
+    @media (max-width: 575px) { @content; }
+  }
+  @else if $breakpoint == sm {
+    @media (min-width: 576px) and (max-width: 767px) { @content; }
+  }
+  @else if $breakpoint == md {
+    @media (min-width: 768px) and (max-width: 991px) { @content; }
+  }
+  @else if $breakpoint == lg {
+    @media (min-width: 992px) and (max-width: 1199px) { @content; }
+  }
+  @else if $breakpoint == xl {
+    @media (min-width: 1200px) and (max-width: 1399px) { @content; }
+  }
+  @else if $breakpoint == xxl {
+    @media (min-width: 1400px) { @content; }
+  }
+}
+
+// ============================================================================
+// 实用工具类
+// ============================================================================
+
+// 颜色实用类
+@each $name, $value in (
+  'primary': var(--primary-500),
+  'secondary': var(--secondary-500),
+  'success': var(--success-500),
+  'warning': var(--warning-500),
+  'error': var(--error-500),
+  'info': var(--info-500)
+) {
+  .text-#{$name} {
+    color: #{$value} !important;
+  }
+  
+  .bg-#{$name} {
+    background-color: #{$value} !important;
+  }
+  
+  .border-#{$name} {
+    border-color: #{$value} !important;
+  }
+}
+
+// 间距实用类
+@each $name, $value in (
+  '0': 0,
+  '1': var(--spacing-1),
+  '2': var(--spacing-2),
+  '3': var(--spacing-3),
+  '4': var(--spacing-4),
+  '5': var(--spacing-5),
+  '6': var(--spacing-6),
+  '8': var(--spacing-8),
+  '10': var(--spacing-10),
+  '12': var(--spacing-12),
+  '16': var(--spacing-16),
+  '20': var(--spacing-20),
+  '24': var(--spacing-24)
+) {
+  .m-#{$name} { margin: #{$value} !important; }
+  .mt-#{$name} { margin-top: #{$value} !important; }
+  .mr-#{$name} { margin-right: #{$value} !important; }
+  .mb-#{$name} { margin-bottom: #{$value} !important; }
+  .ml-#{$name} { margin-left: #{$value} !important; }
+  .mx-#{$name} { margin-left: #{$value} !important; margin-right: #{$value} !important; }
+  .my-#{$name} { margin-top: #{$value} !important; margin-bottom: #{$value} !important; }
+  
+  .p-#{$name} { padding: #{$value} !important; }
+  .pt-#{$name} { padding-top: #{$value} !important; }
+  .pr-#{$name} { padding-right: #{$value} !important; }
+  .pb-#{$name} { padding-bottom: #{$value} !important; }
+  .pl-#{$name} { padding-left: #{$value} !important; }
+  .px-#{$name} { padding-left: #{$value} !important; padding-right: #{$value} !important; }
+  .py-#{$name} { padding-top: #{$value} !important; padding-bottom: #{$value} !important; }
+}
+
+// 文本大小实用类
+@each $name, $value in (
+  'xs': var(--text-xs),
+  'sm': var(--text-sm),
+  'base': var(--text-base),
+  'lg': var(--text-lg),
+  'xl': var(--text-xl),
+  '2xl': var(--text-2xl),
+  '3xl': var(--text-3xl)
+) {
+  .text-#{$name} {
+    font-size: #{$value} !important;
+  }
+}
+
+// 字重实用类
+@each $name, $value in (
+  'thin': var(--font-thin),
+  'light': var(--font-light),
+  'normal': var(--font-normal),
+  'medium': var(--font-medium),
+  'semibold': var(--font-semibold),
+  'bold': var(--font-bold)
+) {
+  .font-#{$name} {
+    font-weight: #{$value} !important;
+  }
+}
+
+// 圆角实用类
+@each $name, $value in (
+  'none': var(--radius-none),
+  'sm': var(--radius-sm),
+  'md': var(--radius-md),
+  'lg': var(--radius-lg),
+  'xl': var(--radius-xl),
+  '2xl': var(--radius-2xl),
+  'full': var(--radius-full)
+) {
+  .rounded-#{$name} {
+    border-radius: #{$value} !important;
+  }
+}
+
+// 阴影实用类
+@each $name, $value in (
+  'xs': var(--shadow-xs),
+  'sm': var(--shadow-sm),
+  'md': var(--shadow-md),
+  'lg': var(--shadow-lg),
+  'xl': var(--shadow-xl),
+  '2xl': var(--shadow-2xl),
+  'inner': var(--shadow-inner)
+) {
+  .shadow-#{$name} {
+    box-shadow: #{$value} !important;
+  }
+}
+
+// 过渡实用类
+.transition-none { transition: none !important; }
+.transition-all { transition: all var(--transition-base) var(--ease-in-out) !important; }
+.transition-colors { transition: color var(--transition-base) var(--ease-in-out), background-color var(--transition-base) var(--ease-in-out), border-color var(--transition-base) var(--ease-in-out) !important; }
+.transition-opacity { transition: opacity var(--transition-base) var(--ease-in-out) !important; }
+.transition-shadow { transition: box-shadow var(--transition-base) var(--ease-in-out) !important; }
+.transition-transform { transition: transform var(--transition-base) var(--ease-in-out) !important; }
+
+// 深色主题支持 - 修复重复定义，使用上面更完整的定义
+// 这里保留空的选择器以避免破坏现有引用
+[data-theme="dark"] {
+  // 深色主题变量已在第308-357行完整定义
+}
+
+// 实用类
+// ----------------------------------------
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.transition-all {
+  transition: all var(--transition-base);
+}
+
+.transition-colors {
+  transition: color var(--transition-base), 
+              background-color var(--transition-base), 
+              border-color var(--transition-base);
+}
+
+.transition-transform {
+  transition: transform var(--transition-base);
+}
+
+// 动画关键帧
+// ----------------------------------------
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 动画类
+.animate-fade-in {
+  animation: fadeIn var(--transition-base) ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp var(--transition-base) ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight var(--transition-base) ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft var(--transition-base) ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

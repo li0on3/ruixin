@@ -1,0 +1,515 @@
+// 主题样式定义
+// ============================================
+
+// 浅色主题（默认）
+:root,
+[data-theme="light"] {
+  // 背景色
+  --bg-page: #f5f7fa;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f0f2f5;
+  
+  // 文字颜色
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #ffffff;
+  
+  // 边框颜色
+  --border-light: #e2e8f0;
+  --border-base: #cbd5e1;
+  --border-dark: #94a3b8;
+  
+  // 阴影
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  // Element Plus 变量覆盖
+  --el-bg-color: var(--bg-primary);
+  --el-bg-color-page: var(--bg-page);
+  --el-text-color-primary: var(--text-primary);
+  --el-text-color-regular: var(--text-secondary);
+  --el-text-color-secondary: var(--text-tertiary);
+  --el-border-color-base: var(--border-base);
+  --el-border-color-light: var(--border-light);
+  --el-border-color-lighter: var(--border-light);
+  --el-border-color-extra-light: var(--border-light);
+  
+  // 组件背景色
+  --el-fill-color-blank: var(--bg-primary);
+  --el-fill-color-light: var(--bg-secondary);
+  --el-fill-color-lighter: var(--bg-tertiary);
+  
+  // 遮罩层
+  --el-mask-color: rgba(0, 0, 0, 0.5);
+  --el-mask-color-extra-light: rgba(0, 0, 0, 0.3);
+}
+
+// 深色主题
+[data-theme="dark"] {
+  // 背景色
+  --bg-page: #0f172a;
+  --bg-primary: #1e293b;
+  --bg-secondary: #334155;
+  --bg-tertiary: #475569;
+  
+  // 文字颜色
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #1e293b;
+  
+  // 边框颜色
+  --border-light: #334155;
+  --border-base: #475569;
+  --border-dark: #64748b;
+  
+  // 阴影
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  
+  // Element Plus 变量覆盖
+  --el-bg-color: var(--bg-primary);
+  --el-bg-color-page: var(--bg-page);
+  --el-text-color-primary: var(--text-primary);
+  --el-text-color-regular: var(--text-secondary);
+  --el-text-color-secondary: var(--text-tertiary);
+  --el-border-color-base: var(--border-base);
+  --el-border-color-light: var(--border-light);
+  --el-border-color-lighter: var(--border-light);
+  --el-border-color-extra-light: var(--border-light);
+  
+  // 组件背景色
+  --el-fill-color-blank: var(--bg-primary);
+  --el-fill-color-light: var(--bg-secondary);
+  --el-fill-color-lighter: var(--bg-tertiary);
+  
+  // 遮罩层
+  --el-mask-color: rgba(0, 0, 0, 0.7);
+  --el-mask-color-extra-light: rgba(0, 0, 0, 0.5);
+  
+  // 调整主色在深色主题下的亮度
+  --primary-50: #431407;
+  --primary-100: #7c2d12;
+  --primary-200: #9a3412;
+  --primary-300: #c2410c;
+  --primary-400: #ea580c;
+  --primary-500: #fb923c; // 深色主题下的主色更亮
+  --primary-600: #fdba74;
+  --primary-700: #fed7aa;
+  --primary-800: #ffedd5;
+  --primary-900: #fff7ed;
+  
+  // 调整辅助色
+  --success-50: #14532d;
+  --success-100: #166534;
+  --success-200: #15803d;
+  --success-300: #16a34a;
+  --success-400: #22c55e;
+  --success-500: #4ade80;
+  --success-600: #86efac;
+  --success-700: #bbf7d0;
+  --success-800: #dcfce7;
+  --success-900: #f0fdf4;
+}
+
+// 主题切换过渡
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+}
+
+// 组件适配
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+}
+
+// 卡片样式
+.el-card {
+  background-color: var(--bg-primary);
+  border-color: var(--border-light);
+  color: var(--text-primary);
+  
+  .el-card__header {
+    border-bottom-color: var(--border-light);
+  }
+}
+
+// 表格样式
+.el-table {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  
+  th.el-table__cell {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+  
+  tr {
+    background-color: var(--bg-primary);
+    
+    &:hover > td.el-table__cell {
+      background-color: var(--bg-secondary);
+    }
+  }
+  
+  td.el-table__cell {
+    border-bottom-color: var(--border-light);
+  }
+}
+
+// 输入框样式
+.el-input__wrapper {
+  background-color: var(--bg-primary);
+  
+  &.is-focus {
+    background-color: var(--bg-primary);
+  }
+}
+
+.el-input__inner {
+  color: var(--text-primary);
+  
+  &::placeholder {
+    color: var(--text-tertiary);
+  }
+}
+
+// 下拉菜单
+.el-dropdown-menu {
+  background-color: var(--bg-primary);
+  border-color: var(--border-light);
+  
+  .el-dropdown-menu__item {
+    color: var(--text-primary);
+    
+    &:hover {
+      background-color: var(--bg-secondary);
+      color: var(--primary-500);
+    }
+  }
+}
+
+// 弹窗
+.el-dialog {
+  background-color: var(--bg-primary);
+  
+  .el-dialog__header {
+    border-bottom-color: var(--border-light);
+  }
+  
+  .el-dialog__title {
+    color: var(--text-primary);
+  }
+}
+
+// 消息提示
+.el-message {
+  background-color: var(--bg-primary);
+  border-color: var(--border-light);
+  color: var(--text-primary);
+}
+
+// 工具提示
+.el-tooltip__popper {
+  &.is-dark {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+}
+
+// 侧边栏适配
+.app-sidebar {
+  background-color: var(--bg-primary);
+  border-right-color: var(--border-light);
+  
+  .el-menu {
+    background-color: transparent;
+    
+    .el-menu-item {
+      color: var(--text-secondary);
+      
+      &:hover {
+        background-color: var(--bg-secondary);
+        color: var(--primary-500);
+      }
+      
+      &.is-active {
+        background-color: var(--primary-50);
+        color: var(--primary-500);
+      }
+    }
+  }
+}
+
+// 深色主题下的特殊处理
+[data-theme="dark"] {
+  // 强制设置页面背景
+  body, html {
+    background-color: var(--bg-page) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  // 主容器背景
+  .app-container,
+  .app-content,
+  .app-main {
+    background-color: var(--bg-page) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  // 修复所有卡片背景
+  .el-card,
+  .search-card,
+  .table-card,
+  .toolbar-card {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    
+    * {
+      color: inherit;
+    }
+  }
+  
+  // 修复输入框
+  .el-input__wrapper,
+  .el-textarea__inner {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-light) !important;
+    
+    &:hover {
+      border-color: var(--border-base) !important;
+    }
+    
+    &.is-focus {
+      border-color: var(--primary-500) !important;
+    }
+  }
+  
+  .el-input__inner,
+  .el-textarea__inner {
+    background-color: transparent !important;
+    color: var(--text-primary) !important;
+    
+    &::placeholder {
+      color: var(--text-tertiary) !important;
+    }
+  }
+  
+  // 修复选择器
+  .el-select__wrapper {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-light) !important;
+  }
+  
+  .el-select-dropdown {
+    background-color: var(--bg-primary) !important;
+    border-color: var(--border-light) !important;
+    
+    .el-select-dropdown__item {
+      color: var(--text-primary) !important;
+      
+      &:hover {
+        background-color: var(--bg-secondary) !important;
+      }
+      
+      &.is-selected {
+        color: var(--primary-500) !important;
+      }
+    }
+  }
+  
+  // 修复日期选择器
+  .el-date-picker__header,
+  .el-picker-panel,
+  .el-picker-panel__content {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  .el-date-table th,
+  .el-date-table td {
+    color: var(--text-primary) !important;
+  }
+  
+  .el-date-table td.today .el-date-table-cell__text {
+    color: var(--primary-500) !important;
+  }
+  
+  // 修复分页组件
+  .el-pagination {
+    .el-pager li,
+    .el-pagination__jump {
+      background-color: var(--bg-secondary) !important;
+      color: var(--text-primary) !important;
+      
+      &:hover {
+        color: var(--primary-500) !important;
+      }
+      
+      &.is-active {
+        background-color: var(--primary-500) !important;
+        color: white !important;
+      }
+    }
+    
+    .el-input__wrapper {
+      background-color: var(--bg-secondary) !important;
+    }
+    
+    button {
+      background-color: transparent !important;
+      color: var(--text-primary) !important;
+      
+      &:hover {
+        color: var(--primary-500) !important;
+      }
+      
+      &:disabled {
+        color: var(--text-tertiary) !important;
+      }
+    }
+  }
+  
+  // 修复面包屑
+  .el-breadcrumb__item {
+    .el-breadcrumb__inner {
+      color: var(--text-secondary) !important;
+      
+      &:hover {
+        color: var(--primary-500) !important;
+      }
+    }
+    
+    &:last-child .el-breadcrumb__inner {
+      color: var(--text-primary) !important;
+    }
+  }
+  
+  // 修复标签页
+  .el-tabs__nav {
+    background-color: var(--bg-primary) !important;
+  }
+  
+  .el-tabs__item {
+    color: var(--text-secondary) !important;
+    
+    &:hover {
+      color: var(--primary-500) !important;
+    }
+    
+    &.is-active {
+      color: var(--primary-500) !important;
+    }
+  }
+  
+  // 修复表单标签
+  .el-form-item__label {
+    color: var(--text-primary) !important;
+  }
+  
+  // 修复弹出框
+  .el-popover.el-popper {
+    background-color: var(--bg-primary) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  // 修复消息框
+  .el-message-box {
+    background-color: var(--bg-primary) !important;
+    border-color: var(--border-light) !important;
+    
+    .el-message-box__title {
+      color: var(--text-primary) !important;
+    }
+    
+    .el-message-box__message {
+      color: var(--text-secondary) !important;
+    }
+  }
+  
+  // 侧边栏在深色主题下的激活状态
+  .app-sidebar .el-menu-item.is-active {
+    background-color: rgba(251, 146, 60, 0.1);
+  }
+  
+  // 按钮在深色主题下的调整
+  .el-button--primary {
+    background-color: var(--primary-500);
+    border-color: var(--primary-500);
+    
+    &:hover {
+      background-color: var(--primary-400);
+      border-color: var(--primary-400);
+    }
+  }
+  
+  // 标签在深色主题下的调整
+  .el-tag {
+    &--primary {
+      background-color: rgba(251, 146, 60, 0.1);
+      border-color: rgba(251, 146, 60, 0.2);
+      color: var(--primary-500);
+    }
+    
+    &--success {
+      background-color: rgba(74, 222, 128, 0.1);
+      border-color: rgba(74, 222, 128, 0.2);
+      color: var(--success-500);
+    }
+    
+    &--warning {
+      background-color: rgba(251, 191, 36, 0.1);
+      border-color: rgba(251, 191, 36, 0.2);
+      color: var(--warning-500);
+    }
+    
+    &--danger {
+      background-color: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.2);
+      color: var(--error-500);
+    }
+  }
+  
+  // 修复搜索卡片和工具栏
+  .search-form,
+  .toolbar-content {
+    background-color: transparent !important;
+  }
+  
+  // 确保所有文本都使用正确的颜色
+  p, span, div, h1, h2, h3, h4, h5, h6 {
+    color: inherit;
+  }
+  
+  // 修复统计卡片
+  .stat-card,
+  .chart-card {
+    background-color: var(--bg-primary) !important;
+    
+    .stat-value,
+    .chart-title {
+      color: var(--text-primary) !important;
+    }
+  }
+  
+  // 修复加载状态
+  .el-loading-mask {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  // 修复空状态
+  .el-empty__description {
+    color: var(--text-secondary) !important;
+  }
+}

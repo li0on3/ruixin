@@ -1,0 +1,606 @@
+// ========================================
+// 全局动画和过渡效果样式
+// ========================================
+
+// 一、Vue过渡动画
+// ================
+
+// 1. 淡入淡出
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity var(--transition-base);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+// 2. 缩放淡入淡出
+.fade-scale-enter-active {
+  transition: all var(--transition-base);
+}
+
+.fade-scale-leave-active {
+  transition: all var(--transition-base);
+}
+
+.fade-scale-enter-from {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.fade-scale-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+// 3. 滑动淡入淡出
+.fade-slide-enter-active {
+  transition: all var(--transition-slow) cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.fade-slide-leave-active {
+  transition: all var(--transition-base) cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+// 4. 从右侧滑入
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all var(--transition-base);
+}
+
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+// 5. 从底部滑入
+.slide-up-enter-active {
+  transition: all var(--transition-slow) cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.slide-up-leave-active {
+  transition: all var(--transition-base);
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+// 6. 列表过渡
+.list-enter-active,
+.list-leave-active {
+  transition: all var(--transition-base);
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.list-move {
+  transition: transform var(--transition-base);
+}
+
+.list-leave-active {
+  position: absolute;
+  width: 100%;
+}
+
+// 7. 展开收起
+.collapse-enter-active,
+.collapse-leave-active {
+  transition: all var(--transition-base);
+  overflow: hidden;
+}
+
+.collapse-enter-from,
+.collapse-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+
+// 二、CSS动画关键帧
+// ==================
+
+// 1. 脉冲效果
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+// 2. 呼吸效果
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+// 3. 弹跳效果
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+// 4. 摇摆效果
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+// 5. 旋转加载
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+// 6. 渐变背景动画
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+// 7. 波纹效果
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  &:active::before {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+// 8. 闪光效果
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+// 三、悬停效果
+// ============
+
+// 1. 上浮效果
+.hover-lift {
+  transition: all var(--transition-base);
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+// 2. 放大效果
+.hover-scale {
+  transition: transform var(--transition-base);
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+// 3. 发光效果
+.hover-glow {
+  transition: all var(--transition-base);
+  
+  &:hover {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+}
+
+// 4. 边框动画
+.hover-border {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid transparent;
+    border-radius: inherit;
+    transition: all var(--transition-base);
+  }
+  
+  &:hover::before {
+    border-color: var(--primary-500);
+  }
+}
+
+// 四、加载动画
+// ============
+
+// 1. 点状加载
+.loading-dots {
+  display: inline-flex;
+  gap: 4px;
+  
+  span {
+    width: 8px;
+    height: 8px;
+    background: var(--primary-500);
+    border-radius: 50%;
+    animation: loading-dot 1.4s ease-in-out infinite both;
+    
+    &:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+    
+    &:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+  }
+}
+
+@keyframes loading-dot {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// 2. 条形加载
+.loading-bars {
+  display: inline-flex;
+  gap: 4px;
+  
+  span {
+    width: 4px;
+    height: 20px;
+    background: var(--primary-500);
+    border-radius: 2px;
+    animation: loading-bar 1s ease-in-out infinite;
+    
+    &:nth-child(1) {
+      animation-delay: -0.4s;
+    }
+    
+    &:nth-child(2) {
+      animation-delay: -0.3s;
+    }
+    
+    &:nth-child(3) {
+      animation-delay: -0.2s;
+    }
+    
+    &:nth-child(4) {
+      animation-delay: -0.1s;
+    }
+  }
+}
+
+@keyframes loading-bar {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+  }
+  20% {
+    transform: scaleY(1);
+  }
+}
+
+// 3. 圆形进度
+.loading-circle {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  
+  &::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 32px;
+    margin: 4px;
+    border-radius: 50%;
+    border: 3px solid var(--primary-500);
+    border-color: var(--primary-500) transparent var(--primary-500) transparent;
+    animation: loading-circle 1.2s linear infinite;
+  }
+}
+
+@keyframes loading-circle {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// 五、微交互效果
+// ==============
+
+// 1. 点击波纹
+.click-ripple {
+  position: relative;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: var(--ripple-y, 50%);
+    left: var(--ripple-x, 50%);
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  
+  &.ripple-active::after {
+    animation: ripple-expand 0.6s ease-out;
+  }
+}
+
+@keyframes ripple-expand {
+  to {
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+  }
+}
+
+// 2. 成功动画
+.success-checkmark {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  
+  .checkmark-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke: var(--success);
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+  }
+  
+  .checkmark-check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    stroke: var(--success);
+    fill: none;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+  }
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+// 3. 错误动画
+.error-cross {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  
+  .cross-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke: var(--danger);
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+  }
+  
+  .cross-x {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    stroke: var(--danger);
+    fill: none;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+  }
+}
+
+// 六、页面过渡
+// ============
+
+// 路由切换动画
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.3s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+// 七、工具类
+// ==========
+
+// 过渡时间
+.transition-fast {
+  transition: all var(--transition-fast) !important;
+}
+
+.transition-base {
+  transition: all var(--transition-base) !important;
+}
+
+.transition-slow {
+  transition: all var(--transition-slow) !important;
+}
+
+.transition-none {
+  transition: none !important;
+}
+
+// 动画延迟
+.delay-100 {
+  animation-delay: 100ms !important;
+}
+
+.delay-200 {
+  animation-delay: 200ms !important;
+}
+
+.delay-300 {
+  animation-delay: 300ms !important;
+}
+
+.delay-400 {
+  animation-delay: 400ms !important;
+}
+
+.delay-500 {
+  animation-delay: 500ms !important;
+}
+
+// 动画持续时间
+.duration-100 {
+  animation-duration: 100ms !important;
+}
+
+.duration-200 {
+  animation-duration: 200ms !important;
+}
+
+.duration-300 {
+  animation-duration: 300ms !important;
+}
+
+.duration-500 {
+  animation-duration: 500ms !important;
+}
+
+.duration-1000 {
+  animation-duration: 1000ms !important;
+}

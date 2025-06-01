@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ruixin-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: ruixin_platform
+      MYSQL_USER: ruixin
+      MYSQL_PASSWORD: ruixin123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ruixin-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: ruixin-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ruixin-network
+
+  backend:
+    build: ./backend
+    container_name: ruixin-backend
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - DB_HOST=mysql
+      - REDIS_HOST=redis
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/configs:/root/configs
+      - ./backend/logs:/root/logs
+    networks:
+      - ruixin-network
+
+  frontend:
+    build: ./frontend
+    container_name: ruixin-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - ruixin-network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  ruixin-network:
+    driver: bridge

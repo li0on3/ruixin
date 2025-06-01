@@ -1,0 +1,353 @@
+// 全局样式重置
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// 滚动条样式
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+  
+  &:hover {
+    background: #a8a8a8;
+  }
+}
+
+// 全局标题样式
+h1, h2, h3, h4, h5, h6 {
+  color: #1e293b;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+h1 { font-size: 48px; margin-bottom: 32px; }
+h2 { font-size: 36px; margin-bottom: 28px; }
+h3 { font-size: 28px; margin-bottom: 24px; }
+h4 { font-size: 24px; margin-bottom: 20px; }
+h5 { font-size: 20px; margin-bottom: 16px; }
+h6 { font-size: 18px; margin-bottom: 12px; }
+
+// 公共类
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+// 间距工具类
+.mt-0 { margin-top: 0 !important; }
+.mt-1 { margin-top: 8px !important; }
+.mt-2 { margin-top: 16px !important; }
+.mt-3 { margin-top: 24px !important; }
+.mt-4 { margin-top: 32px !important; }
+.mt-5 { margin-top: 48px !important; }
+
+.mb-0 { margin-bottom: 0 !important; }
+.mb-1 { margin-bottom: 8px !important; }
+.mb-2 { margin-bottom: 16px !important; }
+.mb-3 { margin-bottom: 24px !important; }
+.mb-4 { margin-bottom: 32px !important; }
+.mb-5 { margin-bottom: 48px !important; }
+
+.pt-0 { padding-top: 0 !important; }
+.pt-1 { padding-top: 8px !important; }
+.pt-2 { padding-top: 16px !important; }
+.pt-3 { padding-top: 24px !important; }
+.pt-4 { padding-top: 32px !important; }
+
+.pb-0 { padding-bottom: 0 !important; }
+.pb-1 { padding-bottom: 8px !important; }
+.pb-2 { padding-bottom: 16px !important; }
+.pb-3 { padding-bottom: 24px !important; }
+.pb-4 { padding-bottom: 32px !important; }
+
+// 兼容旧的类名
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+
+// 页面容器 - 已移至 modern.scss
+// .page-container 样式请参考 modern.scss
+
+// 搜索表单
+.search-form {
+  background-color: #f5f7fa;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  
+  .el-form-item {
+    margin-bottom: 16px;
+  }
+  
+  .search-btn-group {
+    text-align: right;
+  }
+}
+
+// 表格工具栏
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+// 状态标签
+.status-tag {
+  &.status-active {
+    color: #67c23a;
+  }
+  
+  &.status-inactive {
+    color: #909399;
+  }
+  
+  &.status-disabled {
+    color: #f56c6c;
+  }
+}
+
+// 现代化卡片样式
+.search-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  
+  .el-form-item {
+    margin-bottom: 16px;
+  }
+}
+
+.table-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  
+  .el-table {
+    margin-bottom: 20px;
+  }
+  
+  .el-pagination {
+    margin-top: 20px;
+    text-align: right;
+  }
+}
+
+// 优化的表格样式
+.table-optimized {
+  // 确保表格内容不溢出
+  .el-table__body-wrapper {
+    overflow-x: auto;
+  }
+  
+  // 表头文字样式
+  .el-table__header th {
+    font-weight: 600;
+    color: #1e293b;
+  }
+  
+  // 单元格内边距优化
+  .el-table__cell {
+    padding: 12px 8px;
+  }
+  
+  // 紧凑的操作按钮
+  .el-button--small {
+    padding: 5px 10px;
+    
+    &.el-button--text {
+      padding: 5px;
+    }
+  }
+  
+  // 状态标签样式
+  .el-tag {
+    font-size: 12px;
+    padding: 0 8px;
+    height: 24px;
+    line-height: 22px;
+  }
+  
+  // 数字列右对齐
+  .is-right {
+    .cell {
+      text-align: right;
+    }
+  }
+  
+  // 居中对齐
+  .is-center {
+    .cell {
+      text-align: center;
+    }
+  }
+}
+
+// Element Plus 样式覆盖
+.el-button.is-text {
+  // 解决蓝色背景导致的对比度问题
+  &:not(.is-disabled) {
+    color: var(--el-color-primary) !important;
+    background-color: transparent !important;
+    
+    &:hover {
+      color: var(--el-color-primary-light-3) !important;
+      background-color: var(--el-color-primary-light-9) !important;
+    }
+    
+    &:active {
+      color: var(--el-color-primary-dark-2) !important;
+      background-color: var(--el-color-primary-light-8) !important;
+    }
+    
+    &:focus {
+      color: var(--el-color-primary) !important;
+      background-color: transparent !important;
+    }
+  }
+  
+  // 确保在不同类型下都有良好的对比度
+  &.el-button--primary {
+    color: var(--el-color-primary) !important;
+  }
+  
+  &.el-button--success {
+    color: var(--el-color-success) !important;
+  }
+  
+  &.el-button--warning {
+    color: var(--el-color-warning) !important;
+  }
+  
+  &.el-button--danger {
+    color: var(--el-color-danger) !important;
+  }
+  
+  &.el-button--info {
+    color: var(--el-color-info) !important;
+  }
+}
+
+// link类型按钮样式优化 - 彻底修复对比度问题
+.el-button {
+  // 针对所有text类型和link类型按钮的统一修复
+  &.is-text,
+  &.is-link,
+  &--text {
+    &:not(.is-disabled) {
+      background-color: transparent !important;
+      border-color: transparent !important;
+      
+      // 默认状态 - 使用主题色但背景透明
+      &.el-button--primary {
+        color: var(--el-color-primary) !important;
+        &:hover {
+          color: var(--el-color-primary-dark-2) !important;
+          background-color: var(--el-color-primary-light-9) !important;
+        }
+      }
+      
+      &.el-button--success {
+        color: var(--el-color-success) !important;
+        &:hover {
+          color: var(--el-color-success-dark-2) !important;
+          background-color: var(--el-color-success-light-9) !important;
+        }
+      }
+      
+      &.el-button--danger {
+        color: var(--el-color-danger) !important;
+        &:hover {
+          color: var(--el-color-danger-dark-2) !important;
+          background-color: var(--el-color-danger-light-9) !important;
+        }
+      }
+      
+      &.el-button--warning {
+        color: var(--el-color-warning) !important;
+        &:hover {
+          color: var(--el-color-warning-dark-2) !important;
+          background-color: var(--el-color-warning-light-9) !important;
+        }
+      }
+      
+      &.el-button--info {
+        color: var(--el-color-info) !important;
+        &:hover {
+          color: var(--el-color-info-dark-2) !important;
+          background-color: var(--el-color-info-light-9) !important;
+        }
+      }
+      
+      // 如果没有指定类型，默认使用primary色
+      &:not(.el-button--primary):not(.el-button--success):not(.el-button--danger):not(.el-button--warning):not(.el-button--info) {
+        color: var(--el-color-primary) !important;
+        &:hover {
+          color: var(--el-color-primary-dark-2) !important;
+          background-color: var(--el-color-primary-light-9) !important;
+        }
+      }
+      
+      // 通用的焦点和激活状态
+      &:active {
+        background-color: transparent !important;
+        transform: translateY(1px);
+      }
+      
+      &:focus {
+        background-color: transparent !important;
+        outline: none !important;
+      }
+    }
+  }
+  
+  // 特别处理同时有type="primary"和text属性的按钮
+  &[type="primary"].is-text,
+  &.el-button--primary.is-text {
+    color: var(--el-color-primary) !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    
+    &:hover {
+      color: var(--el-color-primary-dark-2) !important;
+      background-color: var(--el-color-primary-light-9) !important;
+    }
+  }
+}
+
+// 引入消息提示样式
+@import './message.scss';
+
+// 深色主题样式已经在 main.js 中通过 dark-theme-unified.scss 引入
