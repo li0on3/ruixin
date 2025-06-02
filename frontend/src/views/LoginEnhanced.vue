@@ -72,6 +72,9 @@
                 :disabled="loading"
                 class="form-input"
                 @focus="clearFieldError('username')"
+                @blur="validateField('username')"
+                @input="handleUsernameInput"
+                clearable
               >
 
               </el-input>
@@ -86,11 +89,19 @@
                 show-password
                 class="form-input"
                 @focus="clearFieldError('password')"
+                @blur="validateField('password')"
+                @input="handlePasswordInput"
               >
                 <template #prefix>
                   <el-icon class="input-icon"><Lock /></el-icon>
                 </template>
               </el-input>
+            </el-form-item>
+            
+            <el-form-item class="form-item remember-me-item">
+              <el-checkbox v-model="rememberMe" @keyup.enter="handleLogin">
+                记住我
+              </el-checkbox>
             </el-form-item>
             
             <el-form-item class="form-item login-actions">
@@ -135,6 +146,7 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
+import LoadingAnimation from '@/components/LoadingAnimation.vue'
 import { 
   User, Lock, Coffee, Monitor, DataLine, 
   CircleCloseFilled, CircleCheckFilled, WarningFilled, InfoFilled, Close 
@@ -167,6 +179,9 @@ const loginForm = reactive({
   username: '',
   password: ''
 })
+
+// 记住我状态
+const rememberMe = ref(false)
 
 // 表单验证规则
 const loginRules = {
@@ -256,6 +271,33 @@ const clearFieldError = (field) => {
   }
 }
 
+// 验证单个字段
+const validateField = async (field) => {
+  if (!loginFormRef.value) return
+  
+  try {
+    await loginFormRef.value.validateField(field)
+  } catch (error) {
+    // 验证失败，但不需要额外处理，Element Plus 会显示错误
+  }
+}
+
+// 处理用户名输入
+const handleUsernameInput = () => {
+  // 清除错误状态
+  if (fieldErrors.username) {
+    clearFieldError('username')
+  }
+}
+
+// 处理密码输入
+const handlePasswordInput = () => {
+  // 清除错误状态
+  if (fieldErrors.password) {
+    clearFieldError('password')
+  }
+}
+
 // 登录处理
 const handleLogin = async () => {
   if (!loginFormRef.value) return
@@ -272,6 +314,15 @@ const handleLogin = async () => {
     window.__skipLoginMessage = true
     
     await userStore.login(loginForm)
+    
+    // 处理记住我功能
+    if (rememberMe.value) {
+      localStorage.setItem('savedUsername', loginForm.username)
+      localStorage.setItem('rememberMe', 'true')
+    } else {
+      localStorage.removeItem('savedUsername')
+      localStorage.removeItem('rememberMe')
+    }
     
     // 显示成功提示
     showAlertCard('success', '登录成功', '欢迎回来！正在为您跳转到管理后台...')
@@ -307,6 +358,15 @@ const handleLogin = async () => {
     }
     
     showAlertCard('error', errorConfig.title, errorConfig.description, errorConfig.fields)
+    
+    // 错误后自动聚焦到第一个错误字段
+    setTimeout(() => {
+      if (errorConfig.fields.includes('username')) {
+        document.querySelector('input[type="text"]')?.focus()
+      } else if (errorConfig.fields.includes('password')) {
+        document.querySelector('input[type="password"]')?.focus()
+      }
+    }, 300)
   } finally {
     loading.value = false
     window.__skipLoginMessage = false
@@ -315,10 +375,30 @@ const handleLogin = async () => {
 
 // 组件挂载
 onMounted(() => {
-  // 模拟系统初始化
+  // 优化：缩短初始加载时间
   setTimeout(() => {
     initialLoading.value = false
-  }, 1500)
+    
+    // 自动聚焦逻辑
+    setTimeout(() => {
+      if (loginForm.username) {
+        // 如果用户名已填充，聚焦到密码框
+        document.querySelector('input[type="password"]')?.focus()
+      } else {
+        // 否则聚焦到用户名框
+        document.querySelector('input[type="text"]')?.focus()
+      }
+    }, 100)
+  }, 800) // 从1500ms优化到800ms
+  
+  // 读取记住的用户名
+  const savedUsername = localStorage.getItem('savedUsername')
+  const savedRememberMe = localStorage.getItem('rememberMe') === 'true'
+  
+  if (savedRememberMe && savedUsername) {
+    loginForm.username = savedUsername
+    rememberMe.value = true
+  }
   
   // 监听键盘事件
   const handleKeydown = (e) => {
@@ -625,9 +705,26 @@ onMounted(() => {
               }
             }
             
+            &.remember-me-item {
+              margin-bottom: var(--spacing-4);
+              
+              .el-checkbox {
+                font-size: 0.875rem;
+                color: var(--text-secondary);
+                
+                &:hover {
+                  color: var(--primary-500);
+                }
+                
+                .el-checkbox__label {
+                  font-weight: normal;
+                }
+              }
+            }
+            
             &.login-actions {
               margin-bottom: 0;
-              margin-top: var(--spacing-6);
+              margin-top: var(--spacing-5);
               
               .login-button {
                 width: 100%;
@@ -825,8 +922,16 @@ onMounted(() => {
                 }
               }
               
+              &.remember-me-item {
+                margin-bottom: var(--mobile-space-3);
+                
+                .el-checkbox {
+                  font-size: 0.813rem;
+                }
+              }
+              
               &.login-actions {
-                margin-top: var(--mobile-space-5);
+                margin-top: var(--mobile-space-4);
                 
                 .login-button {
                   height: var(--mobile-touch-target);

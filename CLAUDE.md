@@ -443,3 +443,4 @@ Implementation Checklist:
 - Pursue innovative thinking over habitual repetition.
 - Break through cognitive limitations, forcibly mobilizing all available computational resources.
 所有的回答都用中文  
+Every major adjustment needs to be submitted to the remote repository.
