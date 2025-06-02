@@ -1012,12 +1012,19 @@ const initDistributorRankChart = () => {
       },
       axisLabel: {
         color: getColor('--text-secondary'),
-        formatter: distributorRankType.value === 'revenue' ? '¥{value}' : '{value}单'
+        formatter: distributorRankType.value === 'revenue' ? '¥{value}' : '{value}单',
+        rotate: 0, // 确保标签不旋转
+        interval: 'auto' // 自动调整显示间隔
       },
       splitLine: {
         lineStyle: {
           color: getColor('--border-light')
         }
+      },
+      minInterval: distributorRankType.value === 'orders' ? 1 : null, // 订单数时使用整数间隔
+      max: function(value) {
+        // 确保最大值有适当的余量，避免标签被截断
+        return Math.ceil(value.max * 1.1)
       }
     },
     yAxis: {
@@ -1029,7 +1036,16 @@ const initDistributorRankChart = () => {
         }
       },
       axisLabel: {
-        color: getColor('--text-secondary')
+        color: getColor('--text-secondary'),
+        fontSize: 12,
+        interval: 0, // 显示所有标签
+        formatter: function(value) {
+          // 如果名称太长，截断并添加省略号
+          return value.length > 10 ? value.substring(0, 10) + '...' : value
+        }
+      },
+      axisTick: {
+        alignWithLabel: true
       }
     },
     series: [
@@ -1037,24 +1053,38 @@ const initDistributorRankChart = () => {
         name: distributorRankType.value === 'revenue' ? '销售额' : '订单数',
         type: 'bar',
         data: values,
+        barMaxWidth: 30, // 限制条形图最大宽度
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
             { offset: 0, color: getColor('--primary-light') },
             { offset: 1, color: getColor('--primary') }
-          ])
+          ]),
+          borderRadius: [0, 4, 4, 0] // 右侧圆角
         },
         emphasis: {
           itemStyle: {
             color: getColor('--primary-dark')
           }
+        },
+        label: {
+          show: true,
+          position: 'right',
+          formatter: function(params) {
+            return distributorRankType.value === 'revenue' 
+              ? `¥${params.value.toLocaleString()}` 
+              : `${params.value}单`
+          },
+          color: getColor('--text-secondary'),
+          fontSize: 11
         }
       }
     ],
     grid: {
       left: '20%',
-      right: '4%',
-      bottom: '3%',
-      top: '10%'
+      right: '15%', // 增加右边距，确保标签有足够空间
+      bottom: '10%', // 增加底部边距
+      top: '10%',
+      containLabel: true // 确保标签不会被裁剪
     }
   }
   
