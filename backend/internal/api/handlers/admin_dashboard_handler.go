@@ -19,7 +19,11 @@ func NewAdminDashboardHandler(dashboardService *services.DashboardService) *Admi
 
 // GetStatistics 获取统计数据
 func (h *AdminDashboardHandler) GetStatistics(c *gin.Context) {
-	stats, err := h.dashboardService.GetStatistics()
+	// 获取日期参数
+	startDate := c.Query("start_date")
+	endDate := c.Query("end_date")
+	
+	stats, err := h.dashboardService.GetStatisticsWithDateRange(startDate, endDate)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 500,
@@ -76,7 +80,11 @@ func (h *AdminDashboardHandler) GetOrderTrend(c *gin.Context) {
 
 // GetHotGoods 获取热门商品
 func (h *AdminDashboardHandler) GetHotGoods(c *gin.Context) {
-	hotGoods, err := h.dashboardService.GetHotGoods(10)
+	// 获取日期参数
+	startDate := c.Query("start_date")
+	endDate := c.Query("end_date")
+	
+	hotGoods, err := h.dashboardService.GetHotGoodsWithDateRange(startDate, endDate, 10)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 500,
@@ -95,7 +103,11 @@ func (h *AdminDashboardHandler) GetHotGoods(c *gin.Context) {
 
 // GetRecentOrders 获取最新订单
 func (h *AdminDashboardHandler) GetRecentOrders(c *gin.Context) {
-	orders, err := h.dashboardService.GetRecentOrders(10)
+	// 获取日期参数
+	startDate := c.Query("start_date")
+	endDate := c.Query("end_date")
+	
+	orders, err := h.dashboardService.GetRecentOrdersWithDateRange(startDate, endDate, 10)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 500,

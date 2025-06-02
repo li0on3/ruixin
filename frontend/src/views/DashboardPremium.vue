@@ -182,11 +182,11 @@
             <div class="chart-stats">
               <div class="stat-item">
                 <span class="stat-label">最高值</span>
-                <span class="stat-value">¥{{ formatNumber(trendStats.max) }}</span>
+                <span class="stat-value">{{ formatTrendStatValue(trendStats.max) }}</span>
               </div>
               <div class="stat-item">
                 <span class="stat-label">平均值</span>
-                <span class="stat-value">¥{{ formatNumber(trendStats.avg) }}</span>
+                <span class="stat-value">{{ formatTrendStatValue(trendStats.avg) }}</span>
               </div>
               <div class="stat-item">
                 <span class="stat-label">增长率</span>
@@ -591,6 +591,14 @@ const formatNumber = (num) => {
   return new Intl.NumberFormat('zh-CN').format(num)
 }
 
+const formatTrendStatValue = (value) => {
+  if (trendChartType.value === 'orders') {
+    return Math.round(value) + ' 单'
+  } else {
+    return '¥' + formatNumber(value.toFixed(2))
+  }
+}
+
 const formatRelativeTime = (date) => {
   const now = new Date()
   const diffMs = now - new Date(date)
@@ -616,7 +624,17 @@ const setChartRef = (key, el) => {
 
 const handleDateChange = (dates) => {
   console.log('Date range changed:', dates)
-  loadDashboardData()
+  console.log('Current dateRange value:', dateRange.value)
+  
+  // 当用户使用顶部日期选择器时，清空销售趋势的时间周期选择
+  trendPeriod.value = ''
+  
+  // 确保日期范围已更新
+  if (dates && dates.length === 2) {
+    loadDashboardData()
+  } else {
+    console.warn('Invalid date range:', dates)
+  }
 }
 
 const handleMetricClick = (metric) => {
@@ -689,8 +707,16 @@ const updateTrendChart = () => {
 
 const loadDashboardData = async () => {
   try {
-    // 加载核心指标
-    const statsResponse = await getDashboardStatistics()
+    console.log('Loading dashboard data with date range:', dateRange.value)
+    
+    // 准备日期参数
+    const dateParams = dateRange.value && dateRange.value.length === 2 ? {
+      start_date: dateRange.value[0],
+      end_date: dateRange.value[1]
+    } : {}
+    
+    // 加载核心指标 - 传递日期参数
+    const statsResponse = await getDashboardStatistics(dateParams)
     if (statsResponse.code === 200) {
       updateCoreMetrics(statsResponse.data)
     } else {
@@ -700,8 +726,8 @@ const loadDashboardData = async () => {
       coreMetrics.value = []
     }
     
-    // 加载最新订单
-    const ordersResponse = await getRecentOrders()
+    // 加载最新订单 - 传递日期参数
+    const ordersResponse = await getRecentOrders(dateParams)
     if (ordersResponse.code === 200) {
       recentOrders.value = ordersResponse.data
     } else {
@@ -709,8 +735,8 @@ const loadDashboardData = async () => {
       recentOrders.value = []
     }
     
-    // 加载热销商品
-    const productsResponse = await getHotGoods()
+    // 加载热销商品 - 传递日期参数
+    const productsResponse = await getHotGoods(dateParams)
     if (productsResponse.code === 200) {
       topProducts.value = productsResponse.data
     } else {
@@ -733,12 +759,18 @@ const loadDashboardData = async () => {
 }
 
 const updateCoreMetrics = (data) => {
+  console.log('Updating core metrics with data:', data)
+  
+  // 根据日期范围调整标题
+  const dateRangeLabel = data.dateRange?.label || '今日'
+  const isToday = dateRangeLabel === '今日'
+  
   // 初始化核心指标结构（根据后端实际返回的数据字段）
   coreMetrics.value = [
     {
       key: 'todayAmount',
-      title: '今日销售额',
-      subtitle: '今日累计',
+      title: `${dateRangeLabel}销售额`,
+      subtitle: isToday ? '今日累计' : dateRangeLabel,
       value: data.todayAmount || 0,
       prefix: '¥',
       trend: data.amountGrowth || 0,
@@ -750,8 +782,8 @@ const updateCoreMetrics = (data) => {
     },
     {
       key: 'todayOrders',
-      title: '今日订单数',
-      subtitle: '今日累计',
+      title: `${dateRangeLabel}订单数`,
+      subtitle: isToday ? '今日累计' : dateRangeLabel,
       value: data.todayOrders || 0,
       trend: data.orderGrowth || 0,
       icon: 'ShoppingCart',
@@ -800,15 +832,63 @@ const initTrendChart = async () => {
   chartsLoading.trend = true
   
   try {
+    // 根据 trendPeriod 计算日期范围
+    let startDate, endDate
+    
+    if (trendPeriod.value && trendPeriod.value !== '') {
+      // 如果选择了时间周期选择器，使用它的值
+      const end = new Date()
+      const start = new Date()
+      const days = parseInt(trendPeriod.value)
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * (days - 1)) // 减1天以包含今天
+      
+      // 格式化日期为 YYYY-MM-DD 格式
+      const formatDate = (date) => {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+      }
+      
+      startDate = formatDate(start)
+      endDate = formatDate(end)
+    } else if (dateRange.value && dateRange.value.length === 2) {
+      // 否则使用顶部日期选择器的值
+      startDate = dateRange.value[0]
+      endDate = dateRange.value[1]
+    } else {
+      // 如果都没有值，使用默认的30天
+      const end = new Date()
+      const start = new Date()
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 29) // 30天
+      
+      const formatDate = (date) => {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+      }
+      
+      startDate = formatDate(start)
+      endDate = formatDate(end)
+    }
+    
+    console.log('Trend chart loading with date range:', startDate, 'to', endDate)
+    
     // 从真实 API 获取趋势数据
     const response = await getSalesTrend({
-      start_date: dateRange.value?.[0],
-      end_date: dateRange.value?.[1]
+      start_date: startDate,
+      end_date: endDate
     })
+    
+    console.log('Sales trend API response:', response)
     
     let trendData = []
     if (response.code === 200 && response.data) {
       trendData = response.data
+      console.log('Trend data:', trendData)
+    } else {
+      console.error('Failed to get trend data:', response)
     }
     
     const chart = echarts.init(trendChartRef.value, chartTheme.value)
@@ -834,48 +914,140 @@ const initTrendChart = async () => {
     const dates = trendData.map(item => item.date)
     const revenueData = trendData.map(item => item.revenue || 0)
     const ordersData = trendData.map(item => item.orders || 0)
+    const avgValueData = trendData.map(item => item.avgValue || 0)
+    
+    // 计算利润数据（假设利润率为30%）
+    const profitData = revenueData.map(revenue => revenue * 0.3)
+    
+    // 根据选择的图表类型设置数据
+    let selectedData = []
+    let selectedLabel = ''
+    let selectedUnit = ''
+    let selectedColor = ''
+    
+    switch (trendChartType.value) {
+      case 'revenue':
+        selectedData = revenueData
+        selectedLabel = '销售额'
+        selectedUnit = '元'
+        selectedColor = '#FF6B35'
+        break
+      case 'orders':
+        selectedData = ordersData
+        selectedLabel = '订单量'
+        selectedUnit = '单'
+        selectedColor = '#06D6A0'
+        break
+      case 'profit':
+        selectedData = profitData
+        selectedLabel = '利润'
+        selectedUnit = '元'
+        selectedColor = '#F7931E'
+        break
+    }
+    
+    // 计算统计数据
+    if (selectedData.length > 0) {
+      trendStats.max = Math.max(...selectedData)
+      trendStats.avg = selectedData.reduce((sum, val) => sum + val, 0) / selectedData.length
+      
+      // 计算增长率（最后一天与第一天比较）
+      if (selectedData.length > 1 && selectedData[0] > 0) {
+        const firstValue = selectedData[0]
+        const lastValue = selectedData[selectedData.length - 1]
+        trendStats.growth = ((lastValue - firstValue) / firstValue * 100).toFixed(1)
+      } else {
+        trendStats.growth = 0
+      }
+    } else {
+      trendStats.max = 0
+      trendStats.avg = 0
+      trendStats.growth = 0
+    }
     
     const option = {
       tooltip: {
         trigger: 'axis',
         axisPointer: {
-          type: 'cross'
+          type: 'shadow'
         },
         backgroundColor: 'rgba(255, 255, 255, 0.95)',
         borderColor: '#E5E7EB',
         textStyle: {
           color: '#374151'
+        },
+        formatter: function(params) {
+          const date = params[0].name
+          const value = params[0].value
+          return `${date}<br/>${selectedLabel}: ${value.toFixed(2)} ${selectedUnit}`
         }
       },
-      legend: {
-        data: ['销售额', '订单量'],
-        top: 10
+      grid: {
+        top: 60,
+        left: 60,
+        right: 40,
+        bottom: 60,
+        containLabel: true
       },
       xAxis: {
         type: 'category',
         data: dates,
-        boundaryGap: false
-      },
-      yAxis: [
-        {
-          type: 'value',
-          name: '销售额(元)',
-          position: 'left'
+        boundaryGap: false,
+        axisLine: {
+          lineStyle: {
+            color: '#E5E7EB'
+          }
         },
-        {
-          type: 'value',
-          name: '订单量',
-          position: 'right'
+        axisTick: {
+          lineStyle: {
+            color: '#E5E7EB'
+          }
+        },
+        axisLabel: {
+          color: '#6B7280'
         }
-      ],
+      },
+      yAxis: {
+        type: 'value',
+        name: `${selectedLabel}(${selectedUnit})`,
+        axisLine: {
+          lineStyle: {
+            color: '#E5E7EB'
+          }
+        },
+        axisTick: {
+          lineStyle: {
+            color: '#E5E7EB'
+          }
+        },
+        axisLabel: {
+          color: '#6B7280',
+          formatter: function(value) {
+            if (trendChartType.value === 'orders') {
+              return value
+            }
+            return value.toFixed(0)
+          }
+        },
+        splitLine: {
+          lineStyle: {
+            color: '#F3F4F6'
+          }
+        }
+      },
       series: [
         {
-          name: '销售额',
+          name: selectedLabel,
           type: 'line',
           smooth: true,
-          data: revenueData,
+          data: selectedData,
+          symbol: 'circle',
+          symbolSize: 6,
           itemStyle: {
-            color: '#FF6B35'
+            color: selectedColor
+          },
+          lineStyle: {
+            width: 3
           },
           areaStyle: {
             color: {
@@ -885,20 +1057,10 @@ const initTrendChart = async () => {
               x2: 0,
               y2: 1,
               colorStops: [
-                { offset: 0, color: 'rgba(255, 107, 53, 0.3)' },
-                { offset: 1, color: 'rgba(255, 107, 53, 0.05)' }
+                { offset: 0, color: `${selectedColor}33` }, // 使用十六进制颜色加透明度
+                { offset: 1, color: `${selectedColor}0D` }
               ]
             }
-          }
-        },
-        {
-          name: '订单量',
-          type: 'line',
-          smooth: true,
-          yAxisIndex: 1,
-          data: ordersData,
-          itemStyle: {
-            color: '#06D6A0'
           }
         }
       ]
@@ -936,6 +1098,25 @@ const initProductChart = () => {
   
   setTimeout(() => {
     const chart = echarts.init(productChartRef.value, chartTheme.value)
+    
+    // 如果没有数据，显示空状态
+    if (!topProducts.value.length) {
+      const option = {
+        title: {
+          text: '暂无数据',
+          left: 'center',
+          top: 'middle',
+          textStyle: {
+            color: '#999',
+            fontSize: 16
+          }
+        }
+      }
+      chart.setOption(option)
+      chartInstances.product = chart
+      chartsLoading.product = false
+      return
+    }
     
     const option = {
       tooltip: {

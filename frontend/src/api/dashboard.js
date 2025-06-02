@@ -1,10 +1,11 @@
 import request from './request'
 
 // 获取仪表盘统计数据
-export function getDashboardStatistics() {
+export function getDashboardStatistics(params) {
   return request({
     url: '/admin/dashboard/statistics',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
@@ -18,18 +19,20 @@ export function getOrderTrend(dateRange) {
 }
 
 // 获取热门商品
-export function getHotGoods() {
+export function getHotGoods(params) {
   return request({
     url: '/admin/dashboard/hot-goods',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
 // 获取最新订单
-export function getRecentOrders() {
+export function getRecentOrders(params) {
   return request({
     url: '/admin/dashboard/recent-orders',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
