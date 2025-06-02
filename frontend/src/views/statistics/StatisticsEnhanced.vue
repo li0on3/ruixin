@@ -523,45 +523,45 @@ const currentTableColumns = computed(() => {
   const columnConfigs = {
     daily: [
       { prop: 'date', label: '日期', width: 120, align: 'center', fixed: true },
-      { prop: 'orderCount', label: '订单数', width: 100, align: 'center', formatter: (val) => val || 0 },
-      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'newCustomers', label: '新客户数', width: 100, align: 'center', formatter: (val) => val || 0 },
-      { prop: 'conversionRate', label: '转化率', width: 100, align: 'center', formatter: (val) => formatPercent(val) },
-      { prop: 'profit', label: '利润', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'profitRate', label: '利润率', width: 100, align: 'center', formatter: (val) => formatPercent(val) }
+      { prop: 'orderCount', label: '订单数', width: 100, align: 'center', formatter: (row, column, cellValue) => cellValue || 0 },
+      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'newCustomers', label: '新客户数', width: 100, align: 'center', formatter: (row, column, cellValue) => cellValue || 0 },
+      { prop: 'conversionRate', label: '转化率', width: 100, align: 'center', formatter: (row, column, cellValue) => formatPercent(cellValue) },
+      { prop: 'profit', label: '利润', width: 140, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'profitRate', label: '利润率', width: 100, align: 'center', formatter: (row, column, cellValue) => formatPercent(cellValue) }
     ],
     distributor: [
       { prop: 'distributorName', label: '分销商', minWidth: 180, align: 'left', fixed: 'left' },
-      { prop: 'orderCount', label: '订单数', width: 100, align: 'center', formatter: (val) => val || 0 },
-      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'commission', label: '佣金', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'conversionRate', label: '转化率', width: 100, align: 'center', formatter: (val) => formatPercent(val) },
-      { prop: 'percentage', label: '占比', width: 100, align: 'center', formatter: (val) => (Number(val) || 0).toFixed(2) + '%' },
-      { prop: 'status', label: '状态', width: 80, align: 'center', formatter: (val) => val === 1 ? '活跃' : '休眠' }
+      { prop: 'orderCount', label: '订单数', width: 100, align: 'center', formatter: (row, column, cellValue) => cellValue || 0 },
+      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'commission', label: '佣金', width: 140, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'conversionRate', label: '转化率', width: 100, align: 'center', formatter: (row, column, cellValue) => formatPercent(cellValue) },
+      { prop: 'percentage', label: '占比', width: 100, align: 'center', formatter: (row, column, cellValue) => (Number(cellValue) || 0).toFixed(2) + '%' },
+      { prop: 'status', label: '状态', width: 80, align: 'center', formatter: (row, column, cellValue) => cellValue === 1 ? '活跃' : '休眠' }
     ],
     product: [
       { prop: 'productName', label: '商品名称', minWidth: 200, align: 'left', fixed: 'left' },
       { prop: 'category', label: '分类', width: 100, align: 'center' },
-      { prop: 'quantity', label: '销量', width: 100, align: 'center', formatter: (val) => val || 0 },
-      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'cost', label: '成本', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'profit', label: '利润', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'avgPrice', label: '均价', width: 120, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'profitRate', label: '利润率', width: 100, align: 'center', formatter: (val) => formatPercent(val) },
-      { prop: 'percentage', label: '销售占比', width: 120, align: 'center', formatter: (val) => (Number(val) || 0).toFixed(2) + '%' }
+      { prop: 'quantity', label: '销量', width: 100, align: 'center', formatter: (row, column, cellValue) => cellValue || 0 },
+      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'cost', label: '成本', width: 140, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'profit', label: '利润', width: 140, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'avgPrice', label: '均价', width: 120, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'profitRate', label: '利润率', width: 100, align: 'center', formatter: (row, column, cellValue) => formatPercent(cellValue) },
+      { prop: 'percentage', label: '销售占比', width: 120, align: 'center', formatter: (row, column, cellValue) => (Number(cellValue) || 0).toFixed(2) + '%' }
     ],
     store: [
       { prop: 'storeName', label: '门店名称', minWidth: 200, align: 'left', fixed: 'left' },
       { prop: 'storeCode', label: '门店编码', width: 120, align: 'center' },
       { prop: 'city', label: '城市', width: 100, align: 'center' },
       { prop: 'district', label: '区域', width: 120, align: 'center' },
-      { prop: 'orderCount', label: '订单数', width: 100, align: 'center', formatter: (val) => val || 0 },
-      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
-      { prop: 'activeRate', label: '活跃度', width: 100, align: 'center', formatter: (val) => formatPercent(val) },
-      { prop: 'percentage', label: '销售占比', width: 120, align: 'center', formatter: (val) => (Number(val) || 0).toFixed(2) + '%' }
+      { prop: 'orderCount', label: '订单数', width: 100, align: 'center', formatter: (row, column, cellValue) => cellValue || 0 },
+      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'center', formatter: (row, column, cellValue) => formatCurrency(cellValue) },
+      { prop: 'activeRate', label: '活跃度', width: 100, align: 'center', formatter: (row, column, cellValue) => formatPercent(cellValue) },
+      { prop: 'percentage', label: '销售占比', width: 120, align: 'center', formatter: (row, column, cellValue) => (Number(cellValue) || 0).toFixed(2) + '%' }
     ]
   }
   return columnConfigs[tableType.value] || []
