@@ -680,22 +680,33 @@ const loadSalesTrend = async () => {
 const loadDistributorRank = async () => {
   chartLoading.distributor = true
   try {
-    const res = await getDistributorRank({ ...queryParams.value, type: distributorRankType.value, limit: 10 })
-    distributorRankData.value = res.data || []
-    nextTick(() => {
-      if (!isUnmounted) {
-        initDistributorRankChart()
-      }
+    console.log('Loading distributor rank with type:', distributorRankType.value)
+    const res = await getDistributorRank({ 
+      ...queryParams.value, 
+      type: distributorRankType.value, 
+      limit: 10 
     })
+    
+    if (res.code === 200 && res.data) {
+      distributorRankData.value = res.data
+      console.log('Distributor rank data:', res.data)
+    } else {
+      distributorRankData.value = []
+    }
+    
+    // 确保在下一个渲染周期初始化图表
+    await nextTick()
+    if (!isUnmounted) {
+      initDistributorRankChart()
+    }
   } catch (error) {
     console.error('加载分销商排行失败:', error)
     ElMessage.error('加载分销商排行数据失败')
     distributorRankData.value = []
-    nextTick(() => {
-      if (!isUnmounted) {
-        initDistributorRankChart()
-      }
-    })
+    await nextTick()
+    if (!isUnmounted) {
+      initDistributorRankChart()
+    }
   } finally {
     chartLoading.distributor = false
   }
@@ -972,10 +983,13 @@ const initDistributorRankChart = () => {
     return
   }
   
-  const names = distributorRankData.value.map(item => item.distributorName)
+  const names = distributorRankData.value.map(item => item.distributorName || '未知分销商')
   const values = distributorRankData.value.map(item => 
-    distributorRankType.value === 'revenue' ? item.revenue : item.orders
+    distributorRankType.value === 'revenue' ? (item.revenue || 0) : (item.orders || 0)
   )
+  
+  console.log('Chart data - names:', names)
+  console.log('Chart data - values:', values)
   
   const option = {
     tooltip: {
@@ -1416,6 +1430,12 @@ onMounted(() => {
   
   // 添加全局 resize 监听器
   window.addEventListener('resize', handleResize)
+})
+
+// 监听分销商排行类型变化
+watch(distributorRankType, (newVal) => {
+  console.log('Distributor rank type changed to:', newVal)
+  loadDistributorRank()
 })
 
 // 监听主题变化
