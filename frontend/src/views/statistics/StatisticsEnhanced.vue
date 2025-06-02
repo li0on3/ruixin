@@ -522,45 +522,45 @@ const currentTableData = computed(() => {
 const currentTableColumns = computed(() => {
   const columnConfigs = {
     daily: [
-      { prop: 'date', label: '日期', width: 120, align: 'center' },
-      { prop: 'orderCount', label: '订单数', width: 120, align: 'center' },
-      { prop: 'revenue', label: '销售额', width: 140, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'newCustomers', label: '新客户数', width: 120, align: 'center' },
-      { prop: 'conversionRate', label: '转化率', width: 120, align: 'center', formatter: (val) => formatPercent(val) },
-      { prop: 'profit', label: '利润', width: 140, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'profitRate', label: '利润率', width: 120, align: 'center', formatter: (val) => formatPercent(val) }
+      { prop: 'date', label: '日期', width: 120, align: 'center', fixed: true },
+      { prop: 'orderCount', label: '订单数', width: 100, align: 'center', formatter: (val) => val || 0 },
+      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'newCustomers', label: '新客户数', width: 100, align: 'center', formatter: (val) => val || 0 },
+      { prop: 'conversionRate', label: '转化率', width: 100, align: 'center', formatter: (val) => formatPercent(val) },
+      { prop: 'profit', label: '利润', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'profitRate', label: '利润率', width: 100, align: 'center', formatter: (val) => formatPercent(val) }
     ],
     distributor: [
       { prop: 'distributorName', label: '分销商', minWidth: 180, align: 'left', fixed: 'left' },
-      { prop: 'orderCount', label: '订单数', width: 120, align: 'center' },
-      { prop: 'revenue', label: '销售额', width: 140, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'commission', label: '佣金', width: 140, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'conversionRate', label: '转化率', width: 120, align: 'center', formatter: (val) => formatPercent(val) },
-      { prop: 'percentage', label: '占比', width: 120, align: 'center', formatter: (val) => (Number(val) || 0).toFixed(2) + '%' },
-      { prop: 'status', label: '状态', width: 100, align: 'center', formatter: (val) => val === 1 ? '活跃' : '休眠' }
+      { prop: 'orderCount', label: '订单数', width: 100, align: 'center', formatter: (val) => val || 0 },
+      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'commission', label: '佣金', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'conversionRate', label: '转化率', width: 100, align: 'center', formatter: (val) => formatPercent(val) },
+      { prop: 'percentage', label: '占比', width: 100, align: 'center', formatter: (val) => (Number(val) || 0).toFixed(2) + '%' },
+      { prop: 'status', label: '状态', width: 80, align: 'center', formatter: (val) => val === 1 ? '活跃' : '休眠' }
     ],
     product: [
       { prop: 'productName', label: '商品名称', minWidth: 200, align: 'left', fixed: 'left' },
-      { prop: 'category', label: '分类', width: 120, align: 'center' },
-      { prop: 'quantity', label: '销量', width: 120, align: 'center' },
-      { prop: 'revenue', label: '销售额', width: 140, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'cost', label: '成本', width: 140, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'profit', label: '利润', width: 140, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'avgPrice', label: '均价', width: 120, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'profitRate', label: '利润率', width: 120, align: 'center', formatter: (val) => formatPercent(val) },
+      { prop: 'category', label: '分类', width: 100, align: 'center' },
+      { prop: 'quantity', label: '销量', width: 100, align: 'center', formatter: (val) => val || 0 },
+      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'cost', label: '成本', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'profit', label: '利润', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'avgPrice', label: '均价', width: 120, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'profitRate', label: '利润率', width: 100, align: 'center', formatter: (val) => formatPercent(val) },
       { prop: 'percentage', label: '销售占比', width: 120, align: 'center', formatter: (val) => (Number(val) || 0).toFixed(2) + '%' }
     ],
     store: [
       { prop: 'storeName', label: '门店名称', minWidth: 200, align: 'left', fixed: 'left' },
       { prop: 'storeCode', label: '门店编码', width: 120, align: 'center' },
-      { prop: 'city', label: '城市', width: 120, align: 'center' },
+      { prop: 'city', label: '城市', width: 100, align: 'center' },
       { prop: 'district', label: '区域', width: 120, align: 'center' },
-      { prop: 'orderCount', label: '订单数', width: 120, align: 'center' },
-      { prop: 'revenue', label: '销售额', width: 140, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'right', formatter: (val) => formatCurrency(val) },
-      { prop: 'activeRate', label: '活跃度', width: 120, align: 'center', formatter: (val) => formatPercent(val) },
+      { prop: 'orderCount', label: '订单数', width: 100, align: 'center', formatter: (val) => val || 0 },
+      { prop: 'revenue', label: '销售额', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'avgOrderValue', label: '客单价', width: 140, align: 'center', formatter: (val) => formatCurrency(val) },
+      { prop: 'activeRate', label: '活跃度', width: 100, align: 'center', formatter: (val) => formatPercent(val) },
       { prop: 'percentage', label: '销售占比', width: 120, align: 'center', formatter: (val) => (Number(val) || 0).toFixed(2) + '%' }
     ]
   }
@@ -765,8 +765,20 @@ const loadTableData = async () => {
   tableLoading.value = true
   try {
     const res = await getDetailData({ ...queryParams.value, type: tableType.value })
-    const data = res.data || []
-    updateTableData(data)
+    
+    // 检查响应数据结构
+    if (res && res.code === 200) {
+      const data = res.data || []
+      updateTableData(data)
+      
+      // 如果数据为空，显示提示
+      if (data.length === 0) {
+        ElMessage.info('当前时间范围内暂无数据')
+      }
+    } else {
+      updateTableData([])
+      ElMessage.warning(res?.message || '暂无数据')
+    }
   } catch (error) {
     console.error('加载详细数据失败:', error)
     ElMessage.error('加载详细数据失败')
@@ -806,11 +818,16 @@ const initAllCharts = () => {
 }
 
 const initSalesTrendChart = () => {
-  if (!salesTrendData.value || !salesTrendData.value.length) return
   if (isUnmounted) return
   
   const chartDom = document.querySelector('.trend-chart .chart-container')
   if (!chartDom) return
+  
+  // 如果没有数据，显示暂无数据提示
+  if (!salesTrendData.value || !salesTrendData.value.length) {
+    chartDom.innerHTML = '<div class="chart-empty"><el-empty description="暂无数据" /></div>'
+    return
+  }
   
   // 确保销毁旧实例
   if (salesTrendChartInstance) {
@@ -960,11 +977,16 @@ const initSalesTrendChart = () => {
 }
 
 const initDistributorRankChart = () => {
-  if (!distributorRankData.value || !distributorRankData.value.length) return
   if (isUnmounted) return
   
   const chartDom = document.querySelector('.distributor-rank .chart-container')
   if (!chartDom) return
+  
+  // 如果没有数据，显示暂无数据提示
+  if (!distributorRankData.value || !distributorRankData.value.length) {
+    chartDom.innerHTML = '<div class="chart-empty"><el-empty description="暂无数据" /></div>'
+    return
+  }
   
   // 确保销毁旧实例
   if (distributorRankChartInstance) {
@@ -1096,11 +1118,16 @@ const initDistributorRankChart = () => {
 }
 
 const initProductAnalysisChart = () => {
-  if (!productAnalysisData.value || !productAnalysisData.value.length) return
   if (isUnmounted) return
   
   const chartDom = document.querySelector('.product-analysis .chart-container')
   if (!chartDom) return
+  
+  // 如果没有数据，显示暂无数据提示
+  if (!productAnalysisData.value || !productAnalysisData.value.length) {
+    chartDom.innerHTML = '<div class="chart-empty"><el-empty description="暂无数据" /></div>'
+    return
+  }
   
   // 确保销毁旧实例
   if (productAnalysisChartInstance) {
@@ -1218,11 +1245,16 @@ const initProductAnalysisChart = () => {
 }
 
 const initHourDistributionChart = () => {
-  if (!hourDistributionData.value || !hourDistributionData.value.length) return
   if (isUnmounted) return
   
   const chartDom = document.querySelector('.hour-analysis .chart-container')
   if (!chartDom) return
+  
+  // 如果没有数据，显示暂无数据提示
+  if (!hourDistributionData.value || !hourDistributionData.value.length) {
+    chartDom.innerHTML = '<div class="chart-empty"><el-empty description="暂无数据" /></div>'
+    return
+  }
   
   // 确保销毁旧实例
   if (hourDistributionChartInstance) {
@@ -1334,7 +1366,9 @@ const formatCurrency = (num) => {
 
 const formatPercent = (num) => {
   const value = Number(num) || 0
-  return `${(value * 100).toFixed(2)}%`
+  // 如果值大于1，说明已经是百分比形式，否则需要乘以100
+  const percentage = value > 1 ? value : value * 100
+  return `${percentage.toFixed(2)}%`
 }
 
 const formatGrowth = (growth) => {
@@ -1992,28 +2026,59 @@ onBeforeUnmount(() => {
     display: none !important;
   }
   
-  // 对齐样式
-  .el-table__cell {
-    &[class*="text-center"] .cell {
+  // 统一对齐样式 - 修复对齐问题
+  .el-table__header {
+    th .cell {
+      text-align: center !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  
+  .el-table__body {
+    td .cell {
+      // 根据列的align属性设置对齐
+      display: flex;
+      align-items: center;
+    }
+    
+    // 左对齐列
+    td[class*="is-left"] .cell {
+      justify-content: flex-start;
+      text-align: left;
+    }
+    
+    // 居中对齐列
+    td[class*="is-center"] .cell {
+      justify-content: center;
       text-align: center;
     }
     
-    &[class*="text-right"] .cell {
-      text-align: right;
+    // 右对齐列
+    td[class*="is-right"] .cell {
       justify-content: flex-end;
-    }
-    
-    &[class*="text-left"] .cell {
-      text-align: left;
-      justify-content: flex-start;
+      text-align: right;
     }
   }
   
   // 数值列样式
   .cell {
-    &:has(.el-table__cell[class*="text-right"]) {
-      font-variant-numeric: tabular-nums;
-    }
+    font-variant-numeric: tabular-nums;
+    padding: 0 12px;
+  }
+}
+
+// 图表空数据样式
+.chart-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 300px;
+  
+  .el-empty {
+    padding: 40px 0;
   }
 }
 

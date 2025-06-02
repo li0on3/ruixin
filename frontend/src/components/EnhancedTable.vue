@@ -283,7 +283,7 @@
         <!-- 空数据插槽 -->
         <template #empty>
           <div class="table-empty">
-            <el-empty :description="emptyText" />
+            <el-empty :description="emptyText || '暂无数据'" />
           </div>
         </template>
       </el-table>
