@@ -59,3 +59,12 @@ export function getDistributorAPILogs(id, params) {
     params
   })
 }
+
+// 重置分销商密码
+export function resetDistributorPassword(id, data) {
+  return request({
+    url: `/admin/distributors/${id}/reset-password`,
+    method: 'post',
+    data
+  })
+}

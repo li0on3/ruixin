@@ -59,7 +59,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="total_orders" label="总订单" width="80" align="center" />
-      <el-table-column label="操作" width="280" fixed="right" class="column-action">
+      <el-table-column label="操作" width="360" fixed="right" class="column-action">
         <template #default="{ row }">
           <div class="table-action-buttons">
             <el-button link type="primary" @click="handleEdit(row)">
@@ -69,7 +69,10 @@
               密钥
             </el-button>
             <el-button link type="warning" @click="handleResetAPIKey(row)">
-              重置
+              重置密钥
+            </el-button>
+            <el-button link type="warning" @click="handleResetPassword(row)">
+              重置密码
             </el-button>
             <el-button link type="primary" @click="handleViewLogs(row)">
               日志
@@ -245,6 +248,172 @@
       </template>
     </el-dialog>
     </div>
+    
+    <!-- 创建成功对话框 - 显示密码和API密钥 -->
+    <el-dialog
+      v-model="createSuccessDialogVisible"
+      title="分销商创建成功"
+      width="650px"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <el-alert
+        title="请妥善保存以下信息"
+        type="warning"
+        :closable="false"
+        show-icon
+        style="margin-bottom: 20px"
+      >
+        初始密码仅显示一次，请立即保存并告知分销商！
+      </el-alert>
+      
+      <el-descriptions :column="1" border>
+        <el-descriptions-item label="分销商名称">
+          {{ createSuccessInfo.name }}
+        </el-descriptions-item>
+        <el-descriptions-item label="初始密码">
+          <div class="password-wrapper">
+            <span class="password-text">{{ createSuccessInfo.password || '生成中...' }}</span>
+            <el-button
+              type="primary"
+              size="small"
+              text
+              @click="copyToClipboard(createSuccessInfo.password, '密码')"
+            >
+              <el-icon><CopyDocument /></el-icon>
+              复制
+            </el-button>
+          </div>
+        </el-descriptions-item>
+        <el-descriptions-item label="API Key">
+          <div class="api-key-wrapper">
+            <span class="api-key-text">{{ createSuccessInfo.api_key || '生成中...' }}</span>
+            <el-button
+              type="primary"
+              size="small"
+              text
+              @click="copyToClipboard(createSuccessInfo.api_key, 'API Key')"
+            >
+              <el-icon><CopyDocument /></el-icon>
+              复制
+            </el-button>
+          </div>
+        </el-descriptions-item>
+        <el-descriptions-item label="API Secret">
+          <div class="api-key-wrapper">
+            <span class="api-key-text">{{ createSuccessInfo.api_secret || '生成中...' }}</span>
+            <el-button
+              type="primary"
+              size="small"
+              text
+              @click="copyToClipboard(createSuccessInfo.api_secret, 'API Secret')"
+            >
+              <el-icon><CopyDocument /></el-icon>
+              复制
+            </el-button>
+          </div>
+        </el-descriptions-item>
+      </el-descriptions>
+      
+      <div style="margin-top: 20px; padding: 15px; background: #f5f7fa; border-radius: 4px;">
+        <p style="margin: 0 0 10px; font-weight: bold; color: #303133;">使用说明：</p>
+        <ol style="margin: 0; padding-left: 20px; color: #606266; line-height: 1.8;">
+          <li>请将以上信息安全地发送给分销商</li>
+          <li>分销商使用初始密码登录后，建议立即修改密码</li>
+          <li>API密钥用于接口调用认证，请妥善保管</li>
+        </ol>
+      </div>
+      
+      <template #footer>
+        <el-button type="primary" @click="createSuccessDialogVisible = false">
+          我已保存
+        </el-button>
+      </template>
+    </el-dialog>
+    
+    <!-- 重置密码对话框 -->
+    <el-dialog
+      v-model="resetPasswordDialogVisible"
+      title="重置分销商密码"
+      width="500px"
+      :close-on-click-modal="false"
+    >
+      <el-form ref="resetPasswordFormRef" :model="resetPasswordForm" :rules="resetPasswordRules" label-width="100px">
+        <el-form-item label="分销商">
+          <el-input :value="currentResetDistributor.name" disabled />
+        </el-form-item>
+        <el-form-item label="新密码" prop="password">
+          <el-input
+            v-model="resetPasswordForm.password"
+            type="password"
+            placeholder="请输入新密码"
+            show-password
+          >
+            <template #append>
+              <el-button @click="generateRandomPassword">
+                随机生成
+              </el-button>
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-text type="info" size="small">
+            密码长度至少6位，建议包含字母和数字
+          </el-text>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="resetPasswordDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleResetPasswordSubmit" :loading="resetPasswordLoading">
+          确定重置
+        </el-button>
+      </template>
+    </el-dialog>
+    
+    <!-- 重置密码成功对话框 -->
+    <el-dialog
+      v-model="resetPasswordSuccessDialogVisible"
+      title="密码重置成功"
+      width="500px"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <el-alert
+        title="新密码仅显示一次"
+        type="warning"
+        :closable="false"
+        show-icon
+        style="margin-bottom: 20px"
+      >
+        请立即保存新密码并告知分销商！
+      </el-alert>
+      
+      <el-descriptions :column="1" border>
+        <el-descriptions-item label="分销商名称">
+          {{ resetPasswordSuccessInfo.name }}
+        </el-descriptions-item>
+        <el-descriptions-item label="新密码">
+          <div class="password-wrapper">
+            <span class="password-text">{{ resetPasswordSuccessInfo.password }}</span>
+            <el-button
+              type="primary"
+              size="small"
+              text
+              @click="copyToClipboard(resetPasswordSuccessInfo.password, '新密码')"
+            >
+              <el-icon><CopyDocument /></el-icon>
+              复制
+            </el-button>
+          </div>
+        </el-descriptions-item>
+      </el-descriptions>
+      
+      <template #footer>
+        <el-button type="primary" @click="resetPasswordSuccessDialogVisible = false">
+          我已保存
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -252,8 +421,8 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
-import { getDistributors, createDistributor, updateDistributor, deleteDistributor, resetDistributorAPIKey, getDistributorAPILogs, getDistributor } from '@/api/distributor'
+import { Plus, CopyDocument } from '@element-plus/icons-vue'
+import { getDistributors, createDistributor, updateDistributor, deleteDistributor, resetDistributorAPIKey, getDistributorAPILogs, getDistributor, resetDistributorPassword } from '@/api/distributor'
 import { formatDate } from '@/utils/date'
 
 const router = useRouter()
@@ -328,6 +497,40 @@ const currentLogDetail = reactive({
   request_headers: '',
   request_body: '',
   response_body: ''
+})
+
+// 创建成功对话框
+const createSuccessDialogVisible = ref(false)
+const createSuccessInfo = reactive({
+  name: '',
+  password: '',
+  api_key: '',
+  api_secret: ''
+})
+
+// 重置密码对话框
+const resetPasswordDialogVisible = ref(false)
+const resetPasswordFormRef = ref()
+const resetPasswordLoading = ref(false)
+const currentResetDistributor = reactive({
+  id: null,
+  name: ''
+})
+const resetPasswordForm = reactive({
+  password: ''
+})
+const resetPasswordRules = {
+  password: [
+    { required: true, message: '请输入新密码', trigger: 'blur' },
+    { min: 6, message: '密码长度不能少于6位', trigger: 'blur' }
+  ]
+}
+
+// 重置密码成功对话框
+const resetPasswordSuccessDialogVisible = ref(false)
+const resetPasswordSuccessInfo = reactive({
+  name: '',
+  password: ''
 })
 
 // 获取状态类型
@@ -448,11 +651,18 @@ const handleSubmit = async () => {
       ElMessage.success('更新成功')
     } else {
       // 新增
-      await createDistributor(form)
-      ElMessage.success('添加成功')
+      const response = await createDistributor(form)
+      
+      // 显示创建成功对话框，包含密码信息
+      createSuccessInfo.name = form.name
+      createSuccessInfo.password = response.data.default_password || '123456'
+      createSuccessInfo.api_key = response.data.api_key
+      createSuccessInfo.api_secret = response.data.api_secret
+      createSuccessDialogVisible.value = true
+      
+      dialogVisible.value = false
     }
     
-    dialogVisible.value = false
     loadData()
   } catch (error) {
     if (error !== false) {
@@ -558,14 +768,75 @@ const handleDelete = async (row) => {
 }
 
 // 复制到剪贴板
-const copyToClipboard = (text) => {
-  if (!text) return
+const copyToClipboard = (text, label = '') => {
+  if (!text) {
+    ElMessage.warning('没有可复制的内容')
+    return
+  }
   
   navigator.clipboard.writeText(text).then(() => {
-    ElMessage.success('复制成功')
+    ElMessage.success(label ? `${label}已复制到剪贴板` : '复制成功')
   }).catch(() => {
     ElMessage.error('复制失败')
   })
+}
+
+// 生成随机密码
+const generateRandomPassword = () => {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
+  let password = ''
+  for (let i = 0; i < 8; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  resetPasswordForm.password = password
+  ElMessage.success('已生成随机密码')
+}
+
+// 显示重置密码对话框
+const handleResetPassword = (row) => {
+  currentResetDistributor.id = row.id
+  currentResetDistributor.name = row.name
+  resetPasswordForm.password = ''
+  resetPasswordDialogVisible.value = true
+}
+
+// 提交重置密码
+const handleResetPasswordSubmit = async () => {
+  try {
+    await resetPasswordFormRef.value?.validate()
+    
+    await ElMessageBox.confirm(
+      `确定要重置分销商"${currentResetDistributor.name}"的密码吗？`,
+      '重置密码确认',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
+    
+    resetPasswordLoading.value = true
+    
+    await resetDistributorPassword(currentResetDistributor.id, {
+      new_password: resetPasswordForm.password
+    })
+    
+    // 显示重置成功对话框
+    resetPasswordSuccessInfo.name = currentResetDistributor.name
+    resetPasswordSuccessInfo.password = resetPasswordForm.password
+    resetPasswordSuccessDialogVisible.value = true
+    
+    resetPasswordDialogVisible.value = false
+    ElMessage.success('密码重置成功')
+    
+  } catch (error) {
+    if (error !== 'cancel' && error !== false) {
+      console.error('Reset password failed:', error)
+      ElMessage.error('密码重置失败')
+    }
+  } finally {
+    resetPasswordLoading.value = false
+  }
 }
 
 // 分页大小改变
@@ -586,6 +857,34 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.password-wrapper,
+.api-key-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  .password-text,
+  .api-key-text {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    color: #303133;
+    background: #f5f7fa;
+    padding: 4px 8px;
+    border-radius: 4px;
+    user-select: all;
+    word-break: break-all;
+  }
+  
+  .el-button {
+    flex-shrink: 0;
+  }
+}
+
+.el-descriptions {
+  :deep(.el-descriptions__label) {
+    width: 120px;
+  }
+}
 .page-container {
   width: 100%;
   overflow: hidden;
