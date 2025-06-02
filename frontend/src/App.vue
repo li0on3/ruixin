@@ -42,9 +42,15 @@ router.afterEach(() => {
 onMounted(() => {
   // 初始化用户信息
   const token = localStorage.getItem('token')
-  if (token) {
+  const currentPath = router.currentRoute.value.path
+  
+  // 只有在非登录页且有token时才获取用户信息
+  if (token && currentPath !== '/login') {
     userStore.token = token
-    userStore.getUserInfo()
+    // 延迟调用，避免与路由守卫冲突
+    setTimeout(() => {
+      userStore.getUserInfo()
+    }, 500)
   }
 })
 </script>

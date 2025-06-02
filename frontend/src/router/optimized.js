@@ -292,6 +292,12 @@ router.beforeEach(async (to, from, next) => {
   
   // 需要认证的路由但没有 token
   if (to.meta.requiresAuth && !userStore.token) {
+    // 如果已经在跳转到登录页的过程中，直接返回
+    if (from.path === to.path) {
+      next(false)
+      return
+    }
+    
     // 保存尝试访问的路径
     sessionStorage.setItem('redirectPath', to.fullPath)
     next({

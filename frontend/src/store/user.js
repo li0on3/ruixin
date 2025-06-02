@@ -7,7 +7,11 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     token: '',
     userInfo: null,
-    roles: []
+    roles: [],
+    // 添加状态标记
+    isLoggingOut: false,
+    isGettingUserInfo: false,
+    lastGetUserInfoTime: 0
   }),
   
   getters: {
@@ -36,18 +40,53 @@ export const useUserStore = defineStore('user', {
     },
     
     async getUserInfo() {
+      // 防止重复请求
+      const now = Date.now()
+      if (this.isGettingUserInfo || (now - this.lastGetUserInfoTime < 1000)) {
+        return
+      }
+      
+      // 如果没有token，直接返回
+      if (!this.token) {
+        return
+      }
+      
+      this.isGettingUserInfo = true
+      this.lastGetUserInfoTime = now
+      
       try {
         const { data } = await getUserInfo()
         this.userInfo = data
         this.roles = [data.role]
       } catch (error) {
-        this.logout()
+        // 静默处理错误，不自动logout
+        console.error('获取用户信息失败:', error)
+        // 只有在401错误时才清理状态，其他错误保持现状
+        if (error?.response?.status === 401) {
+          // 清理本地状态但不跳转
+          this.token = ''
+          this.userInfo = null
+          this.roles = []
+          localStorage.removeItem('token')
+        }
+      } finally {
+        this.isGettingUserInfo = false
       }
     },
     
     async logout() {
+      // 防止重复执行logout
+      if (this.isLoggingOut) {
+        return
+      }
+      
+      this.isLoggingOut = true
+      
       try {
-        await logout()
+        // 只有在有token时才调用logout接口
+        if (this.token) {
+          await logout()
+        }
       } catch (error) {
         console.error('Logout error:', error)
       } finally {
@@ -55,8 +94,16 @@ export const useUserStore = defineStore('user', {
         this.userInfo = null
         this.roles = []
         localStorage.removeItem('token')
-        // 使用 replace 避免返回按钮问题
-        router.replace('/login')
+        
+        // 只有在不在登录页时才跳转
+        if (router.currentRoute.value.path !== '/login') {
+          router.replace('/login')
+        }
+        
+        // 延迟重置标记，防止快速重复调用
+        setTimeout(() => {
+          this.isLoggingOut = false
+        }, 1000)
       }
     }
   }

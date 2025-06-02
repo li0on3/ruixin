@@ -37,6 +37,25 @@
           <h2 class="form-title">管理员登录</h2>
           <p class="form-subtitle">请输入您的账号信息</p>
           
+          <!-- 内嵌式提示卡片 -->
+          <transition name="alert-fade">
+            <div v-if="showAlert" class="login-alert" :class="`login-alert--${alertType}`">
+              <div class="alert-icon">
+                <el-icon v-if="alertType === 'error'"><CircleCloseFilled /></el-icon>
+                <el-icon v-else-if="alertType === 'success'"><CircleCheckFilled /></el-icon>
+                <el-icon v-else-if="alertType === 'warning'"><WarningFilled /></el-icon>
+                <el-icon v-else><InfoFilled /></el-icon>
+              </div>
+              <div class="alert-content">
+                <div class="alert-title">{{ alertTitle }}</div>
+                <div class="alert-description">{{ alertDescription }}</div>
+              </div>
+              <div class="alert-close" @click="closeAlert">
+                <el-icon><Close /></el-icon>
+              </div>
+            </div>
+          </transition>
+          
           <el-form
             ref="loginFormRef"
             :model="loginForm"
@@ -45,21 +64,20 @@
             @keyup.enter="handleLogin"
             size="large"
           >
-            <el-form-item prop="username" class="form-item">
+            <el-form-item prop="username" class="form-item" :class="{ 'is-error': hasUsernameError }">
               <el-input
                 v-model="loginForm.username"
                 placeholder="请输入用户名"
                 prefix-icon="User"
                 :disabled="loading"
                 class="form-input"
+                @focus="clearFieldError('username')"
               >
-                <template #prefix>
-                  <el-icon class="input-icon"><User /></el-icon>
-                </template>
+
               </el-input>
             </el-form-item>
             
-            <el-form-item prop="password" class="form-item">
+            <el-form-item prop="password" class="form-item" :class="{ 'is-error': hasPasswordError }">
               <el-input
                 v-model="loginForm.password"
                 type="password"
@@ -67,6 +85,7 @@
                 :disabled="loading"
                 show-password
                 class="form-input"
+                @focus="clearFieldError('password')"
               >
                 <template #prefix>
                   <el-icon class="input-icon"><Lock /></el-icon>
@@ -109,24 +128,17 @@
         </div>
       </div>
     </div>
-    
-    <!-- 结果反馈 -->
-    <ResultAnimation
-      v-if="showResult"
-      :visible="showResult"
-      :type="resultType"
-      :title="resultTitle"
-      :description="resultDescription"
-    />
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
-import { ElMessage } from 'element-plus'
-import { User, Lock, Coffee, Monitor, DataLine } from '@element-plus/icons-vue'
+import { 
+  User, Lock, Coffee, Monitor, DataLine, 
+  CircleCloseFilled, CircleCheckFilled, WarningFilled, InfoFilled, Close 
+} from '@element-plus/icons-vue'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -135,10 +147,20 @@ const userStore = useUserStore()
 const loginFormRef = ref()
 const loading = ref(false)
 const initialLoading = ref(true)
-const showResult = ref(false)
-const resultType = ref('success')
-const resultTitle = ref('')
-const resultDescription = ref('')
+
+// 提示卡片状态
+const showAlert = ref(false)
+const alertType = ref('error') // error, success, warning, info
+const alertTitle = ref('')
+const alertDescription = ref('')
+const fieldErrors = reactive({
+  username: false,
+  password: false
+})
+
+// 计算属性
+const hasUsernameError = computed(() => fieldErrors.username)
+const hasPasswordError = computed(() => fieldErrors.password)
 
 // 表单数据
 const loginForm = reactive({
@@ -158,62 +180,137 @@ const loginRules = {
   ]
 }
 
+// 错误消息映射
+const errorMessageMap = {
+  'Invalid username or password': {
+    title: '登录失败',
+    description: '用户名或密码不正确，请检查后重试。如果忘记密码，请联系管理员。',
+    fields: ['username', 'password']
+  },
+  '用户名或密码错误': {
+    title: '登录失败',
+    description: '用户名或密码不正确，请检查后重试。如果忘记密码，请联系管理员。',
+    fields: ['username', 'password']
+  },
+  'Account disabled': {
+    title: '账号状态异常',
+    description: '您的账号已被管理员禁用，如需帮助请联系系统管理员。',
+    fields: []
+  },
+  '账号已被禁用': {
+    title: '账号状态异常',
+    description: '您的账号已被管理员禁用，如需帮助请联系系统管理员。',
+    fields: []
+  },
+  '网络连接失败': {
+    title: '网络错误',
+    description: '无法连接到服务器，请检查您的网络设置或稍后重试。',
+    fields: []
+  },
+  'Network Error': {
+    title: '网络错误',
+    description: '无法连接到服务器，请检查您的网络设置或稍后重试。',
+    fields: []
+  },
+  'default': {
+    title: '登录失败',
+    description: '系统繁忙，请稍后重试。如问题持续，请联系技术支持。',
+    fields: []
+  }
+}
+
+// 显示提示卡片
+const showAlertCard = (type, title, description, affectedFields = []) => {
+  alertType.value = type
+  alertTitle.value = title
+  alertDescription.value = description
+  showAlert.value = true
+  
+  // 标记错误字段
+  affectedFields.forEach(field => {
+    fieldErrors[field] = true
+  })
+  
+  // 自动隐藏（成功提示2秒，错误提示5秒）
+  const duration = type === 'success' ? 2000 : 5000
+  setTimeout(() => {
+    closeAlert()
+  }, duration)
+}
+
+// 关闭提示卡片
+const closeAlert = () => {
+  showAlert.value = false
+  // 清除所有字段错误状态
+  Object.keys(fieldErrors).forEach(key => {
+    fieldErrors[key] = false
+  })
+}
+
+// 清除特定字段错误状态
+const clearFieldError = (field) => {
+  fieldErrors[field] = false
+  // 如果所有字段都没有错误，隐藏提示
+  if (!Object.values(fieldErrors).some(val => val)) {
+    closeAlert()
+  }
+}
+
 // 登录处理
 const handleLogin = async () => {
   if (!loginFormRef.value) return
+  
+  // 清除之前的提示
+  closeAlert()
   
   try {
     await loginFormRef.value.validate()
     
     loading.value = true
     
-    // 模拟网络延迟
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // 禁用登录时的全局消息提示
+    window.__skipLoginMessage = true
     
     await userStore.login(loginForm)
     
-    // 登录成功会在 store 中处理，这里显示成功结果
-    showSuccessResult()
+    // 显示成功提示
+    showAlertCard('success', '登录成功', '欢迎回来！正在为您跳转到管理后台...')
     
-    // 使用 replace 确保跳转，并等待一小段时间让动画显示
+    // 延迟跳转，让用户看到成功提示
     setTimeout(async () => {
       await router.replace('/dashboard')
-    }, 1000)
+    }, 1500)
   } catch (error) {
     console.error('登录失败:', error)
     
-    if (error?.message?.includes('用户名或密码')) {
-      showErrorResult('用户名或密码错误，请重新输入')
-    } else {
-      showErrorResult('登录失败，请检查网络连接')
+    // 根据错误类型显示不同的提示
+    let errorConfig = errorMessageMap.default
+    
+    if (error?.response?.data?.msg) {
+      const errorMsg = error.response.data.msg.toLowerCase()
+      for (const [key, config] of Object.entries(errorMessageMap)) {
+        if (key !== 'default' && errorMsg.includes(key.toLowerCase())) {
+          errorConfig = config
+          break
+        }
+      }
+    } else if (error?.message) {
+      const errorMsg = error.message.toLowerCase()
+      for (const [key, config] of Object.entries(errorMessageMap)) {
+        if (key !== 'default' && errorMsg.includes(key.toLowerCase())) {
+          errorConfig = config
+          break
+        }
+      }
+    } else if (!navigator.onLine) {
+      errorConfig = errorMessageMap['网络连接失败']
     }
+    
+    showAlertCard('error', errorConfig.title, errorConfig.description, errorConfig.fields)
   } finally {
     loading.value = false
+    window.__skipLoginMessage = false
   }
-}
-
-// 显示成功结果
-const showSuccessResult = () => {
-  resultType.value = 'success'
-  resultTitle.value = '登录成功'
-  resultDescription.value = '正在跳转到管理后台...'
-  showResult.value = true
-  
-  setTimeout(() => {
-    showResult.value = false
-  }, 2000)
-}
-
-// 显示错误结果
-const showErrorResult = (message) => {
-  resultType.value = 'error'
-  resultTitle.value = '登录失败'
-  resultDescription.value = message
-  showResult.value = true
-  
-  setTimeout(() => {
-    showResult.value = false
-  }, 3000)
 }
 
 // 组件挂载
@@ -222,6 +319,19 @@ onMounted(() => {
   setTimeout(() => {
     initialLoading.value = false
   }, 1500)
+  
+  // 监听键盘事件
+  const handleKeydown = (e) => {
+    if (e.key === 'Escape' && showAlert.value) {
+      closeAlert()
+    }
+  }
+  window.addEventListener('keydown', handleKeydown)
+  
+  // 组件卸载时移除监听
+  return () => {
+    window.removeEventListener('keydown', handleKeydown)
+  }
 })
 </script>
 
@@ -356,9 +466,131 @@ onMounted(() => {
           font-size: 0.875rem;
         }
         
+        // 登录提示卡片
+        .login-alert {
+          display: flex;
+          align-items: flex-start;
+          gap: var(--spacing-3);
+          padding: var(--spacing-4);
+          margin-bottom: var(--spacing-6);
+          border-radius: var(--radius-lg);
+          border: 1px solid;
+          position: relative;
+          animation: slideInDown 0.3s ease-out;
+          
+          .alert-icon {
+            flex-shrink: 0;
+            font-size: 1.25rem;
+            line-height: 1;
+            margin-top: 2px;
+          }
+          
+          .alert-content {
+            flex: 1;
+            
+            .alert-title {
+              font-size: 1rem;
+              font-weight: 600;
+              margin-bottom: var(--spacing-1);
+              line-height: 1.4;
+            }
+            
+            .alert-description {
+              font-size: 0.875rem;
+              line-height: 1.5;
+              opacity: 0.9;
+            }
+          }
+          
+          .alert-close {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+            opacity: 0.7;
+            
+            &:hover {
+              opacity: 1;
+              background-color: rgba(0, 0, 0, 0.05);
+            }
+            
+            .el-icon {
+              font-size: 0.875rem;
+            }
+          }
+          
+          // 错误样式
+          &--error {
+            background-color: #fef2f2;
+            border-color: #fecaca;
+            color: #dc2626;
+            
+            .alert-icon {
+              color: #dc2626;
+            }
+          }
+          
+          // 成功样式
+          &--success {
+            background-color: #f0fdf4;
+            border-color: #bbf7d0;
+            color: #16a34a;
+            
+            .alert-icon {
+              color: #16a34a;
+            }
+          }
+          
+          // 警告样式
+          &--warning {
+            background-color: #fffbeb;
+            border-color: #fde68a;
+            color: #d97706;
+            
+            .alert-icon {
+              color: #d97706;
+            }
+          }
+          
+          // 信息样式
+          &--info {
+            background-color: #eff6ff;
+            border-color: #bfdbfe;
+            color: #2563eb;
+            
+            .alert-icon {
+              color: #2563eb;
+            }
+          }
+        }
+        
         .login-form {
           .form-item {
             margin-bottom: var(--spacing-5);
+            
+            // 错误状态样式
+            &.is-error {
+              .form-input {
+                .el-input__wrapper {
+                  border-color: #dc2626;
+                  background-color: #fef2f2;
+                  
+                  &:hover {
+                    border-color: #dc2626;
+                  }
+                  
+                  &.is-focus {
+                    border-color: #dc2626;
+                    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+                  }
+                }
+              }
+            }
             
             .form-input {
               .el-input__wrapper {
@@ -511,6 +743,33 @@ onMounted(() => {
   }
 }
 
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 提示卡片过渡动画
+.alert-fade-enter-active,
+.alert-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.alert-fade-enter-from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.alert-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
 // 移动端适配
 @media (max-width: 768px) {
   .login-enhanced-container {
@@ -550,6 +809,10 @@ onMounted(() => {
         .login-form-container {
           .form-title {
             font-size: 1.25rem;
+          }
+          
+          .login-alert {
+            margin-bottom: var(--mobile-space-4);
           }
           
           .login-form {
