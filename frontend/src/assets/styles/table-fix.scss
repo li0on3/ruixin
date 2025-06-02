@@ -1,0 +1,159 @@
+// 统计页面表格对齐修复样式
+
+// Element Plus 表格对齐修复
+.statistics-enhanced-container {
+  .el-table {
+    // 固定表格布局，确保列宽度精确
+    table-layout: fixed !important;
+    
+    // 移除可能导致对齐问题的边框间距
+    border-spacing: 0;
+    border-collapse: collapse;
+    
+    // 表头样式
+    .el-table__header {
+      width: 100% !important;
+      
+      thead {
+        tr {
+          th {
+            border-bottom: 1px solid #ebeef5;
+            padding: 0 !important;
+            
+            .cell {
+              padding: 12px;
+              line-height: 23px;
+              text-align: center;
+              font-weight: 600;
+              color: #303133;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
+    }
+    
+    // 表体样式
+    .el-table__body {
+      width: 100% !important;
+      
+      tbody {
+        tr {
+          td {
+            border-bottom: 1px solid #ebeef5;
+            padding: 0 !important;
+            
+            .cell {
+              padding: 12px;
+              line-height: 23px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            
+            // 根据对齐方式设置文本对齐
+            &.is-left .cell {
+              text-align: left;
+            }
+            
+            &.is-center .cell {
+              text-align: center;
+            }
+            
+            &.is-right .cell {
+              text-align: right;
+            }
+          }
+        }
+      }
+    }
+    
+    // 滚动条样式
+    .el-table__body-wrapper {
+      overflow-x: auto;
+      overflow-y: hidden;
+      
+      // 自定义滚动条
+      &::-webkit-scrollbar {
+        height: 8px;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+        
+        &:hover {
+          background: #a1a1a1;
+        }
+      }
+    }
+    
+    // 确保固定列正常工作
+    .el-table__fixed,
+    .el-table__fixed-right {
+      position: absolute;
+      top: 0;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
+      
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #ebeef5;
+        z-index: 4;
+      }
+    }
+    
+    // 修复列宽度计算问题
+    colgroup {
+      display: table-column-group;
+      
+      col {
+        display: table-column;
+      }
+    }
+    
+    // 数字列使用等宽字体
+    .el-table__cell {
+      &.is-center,
+      &.is-right {
+        .cell {
+          font-variant-numeric: tabular-nums;
+          font-feature-settings: "tnum";
+        }
+      }
+    }
+  }
+  
+  // EnhancedTable 特定样式
+  .enhanced-table {
+    .el-table {
+      // 移除 Element Plus 的默认 before/after 伪元素
+      &::before,
+      &::after {
+        display: none;
+      }
+      
+      // 确保表格宽度计算正确
+      .el-table__header-wrapper,
+      .el-table__body-wrapper {
+        width: 100% !important;
+        
+        table {
+          width: 100% !important;
+        }
+      }
+    }
+  }
+}

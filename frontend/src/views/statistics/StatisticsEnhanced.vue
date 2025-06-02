@@ -268,6 +268,7 @@
             :loading="tableLoading"
             :show-export="true"
             :show-column-settings="true"
+            :border="true"
             export-filename="统计数据"
           />
         </div>
@@ -1538,6 +1539,8 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/table-fix.scss';
+
 .statistics-enhanced-container {
   padding: var(--spacing-6);
   background: var(--bg-page);
@@ -2026,38 +2029,40 @@ onBeforeUnmount(() => {
     display: none !important;
   }
   
-  // 统一对齐样式 - 修复对齐问题
+  // 对齐样式修复
   .el-table__header {
-    th .cell {
-      text-align: center !important;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    th {
+      background-color: #f5f7fa !important;
+      font-weight: 600;
+      
+      .cell {
+        text-align: center !important;
+        padding: 0 12px;
+      }
     }
   }
   
   .el-table__body {
-    td .cell {
-      // 根据列的align属性设置对齐
-      display: flex;
-      align-items: center;
+    td {
+      padding: 12px 0;
+      
+      .cell {
+        padding: 0 12px;
+      }
     }
     
     // 左对齐列
-    td[class*="is-left"] .cell {
-      justify-content: flex-start;
+    td.el-table__cell[class*="is-left"] .cell {
       text-align: left;
     }
     
-    // 居中对齐列
-    td[class*="is-center"] .cell {
-      justify-content: center;
+    // 居中对齐列  
+    td.el-table__cell[class*="is-center"] .cell {
       text-align: center;
     }
     
     // 右对齐列
-    td[class*="is-right"] .cell {
-      justify-content: flex-end;
+    td.el-table__cell[class*="is-right"] .cell {
       text-align: right;
     }
   }
@@ -2066,6 +2071,28 @@ onBeforeUnmount(() => {
   .cell {
     font-variant-numeric: tabular-nums;
     padding: 0 12px;
+  }
+  
+  // 修复表格头部和内容对齐问题
+  .el-table__header-wrapper {
+    .el-table__header {
+      width: 100% !important;
+    }
+  }
+  
+  .el-table__body-wrapper {
+    .el-table__body {
+      width: 100% !important;
+    }
+  }
+  
+  // 确保列宽度一致
+  colgroup {
+    col {
+      &[width] {
+        box-sizing: border-box;
+      }
+    }
   }
 }
 
@@ -2083,21 +2110,48 @@ onBeforeUnmount(() => {
 }
 
 // EnhancedTable 组件样式覆盖
-:deep(.enhanced-table-container) {
+:deep(.enhanced-table) {
   .el-table {
     font-size: 14px;
+    table-layout: fixed !important; // 固定表格布局
     
     .el-table__header {
       th {
         background-color: #f5f7fa;
         color: #303133;
         font-weight: 600;
+        
+        &.el-table__cell {
+          // 确保表头单元格与内容单元格宽度一致
+          box-sizing: border-box;
+        }
       }
     }
     
     .el-table__body {
       td {
         padding: 12px 0;
+        
+        &.el-table__cell {
+          // 确保内容单元格与表头单元格宽度一致
+          box-sizing: border-box;
+        }
+      }
+    }
+    
+    // 确保滚动条不影响对齐
+    .el-table__body-wrapper {
+      &::-webkit-scrollbar {
+        height: 8px;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
       }
     }
   }
