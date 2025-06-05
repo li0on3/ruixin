@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>瑞鑫电商管理系统</title>
+  
+  <!-- DNS预解析和预连接 -->
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+  <link rel="preconnect" href="//cdn.jsdelivr.net" crossorigin>
+  
+  <!-- 关键CSS内联（首屏样式） -->
+  <style>
+    /* 加载动画样式 */
+    #app-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #f5f6fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+    
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid #e0e6ed;
+      border-top-color: #409eff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    .loading-text {
+      margin-top: 16px;
+      color: #606266;
+      font-size: 14px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* 防止内容闪烁 */
+    [v-cloak] {
+      display: none;
+    }
+    
+    /* 基础样式重置 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    }
+  </style>
+  
+  <!-- Element Plus CSS (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus@2.4.3/dist/index.min.css">
+  
+  <!-- 预加载关键字体 -->
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/element-plus@2.4.3/theme-chalk/fonts/element-icons.woff" as="font" type="font/woff" crossorigin>
+</head>
+<body>
+  <!-- 加载中界面 -->
+  <div id="app-loading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">系统加载中，请稍候...</div>
+  </div>
+  
+  <!-- Vue应用挂载点 -->
+  <div id="app" v-cloak></div>
+  
+  <!-- CDN脚本 -->
+  <!-- Vue 3 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.prod.js"></script>
+  
+  <!-- Vue Router -->
+  <script src="https://cdn.jsdelivr.net/npm/vue-router@4.2.5/dist/vue-router.global.prod.js"></script>
+  
+  <!-- Pinia -->
+  <script src="https://cdn.jsdelivr.net/npm/pinia@2.1.7/dist/pinia.iife.prod.js"></script>
+  
+  <!-- Day.js -->
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/locale/zh-cn.js"></script>
+  <script>dayjs.locale('zh-cn')</script>
+  
+  <!-- Element Plus -->
+  <script src="https://cdn.jsdelivr.net/npm/element-plus@2.4.3/dist/index.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+  
+  <!-- ECharts（按需加载） -->
+  <script>
+    // 动态加载ECharts，只在需要时加载
+    window.loadEcharts = function() {
+      return new Promise((resolve, reject) => {
+        if (window.echarts) {
+          resolve(window.echarts);
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js';
+        script.onload = () => resolve(window.echarts);
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    };
+  </script>
+  
+  <!-- 应用主脚本 -->
+  <script type="module" src="/src/main.js"></script>
+  
+  <!-- 移除加载动画 -->
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      // 延迟移除，确保Vue应用已挂载
+      setTimeout(function() {
+        const loader = document.getElementById('app-loading');
+        if (loader) {
+          loader.style.opacity = '0';
+          loader.style.transition = 'opacity 0.3s';
+          setTimeout(() => loader.remove(), 300);
+        }
+      }, 100);
+    });
+  </script>
+  
+  <!-- 错误处理 -->
+  <script>
+    window.addEventListener('error', function(e) {
+      console.error('资源加载失败:', e);
+      // 如果是CDN资源加载失败，可以切换到备用CDN
+      if (e.target.tagName === 'SCRIPT' && e.target.src.includes('cdn.jsdelivr.net')) {
+        console.warn('CDN加载失败，尝试备用方案');
+        // 这里可以实现CDN降级逻辑
+      }
+    }, true);
+  </script>
+  
+  <!-- 性能监控 -->
+  <script>
+    window.addEventListener('load', function() {
+      if (window.performance && window.performance.timing) {
+        const timing = window.performance.timing;
+        const loadTime = timing.loadEventEnd - timing.navigationStart;
+        console.log(`页面完全加载时间: ${loadTime}ms`);
+        
+        // 详细性能指标
+        console.table({
+          'DNS查询': timing.domainLookupEnd - timing.domainLookupStart,
+          'TCP连接': timing.connectEnd - timing.connectStart,
+          '请求响应': timing.responseEnd - timing.requestStart,
+          'DOM解析': timing.domInteractive - timing.domLoading,
+          'DOM完成': timing.domComplete - timing.domInteractive,
+          '总时间': loadTime
+        });
+      }
+    });
+  </script>
+</body>
+</html>

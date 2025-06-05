@@ -306,7 +306,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Search, Refresh, Setting, Grid, Download, Check, Document,
@@ -551,10 +551,20 @@ const handleColumnChange = (checkedColumns) => {
 const resetColumns = () => {
   visibleColumns.value = settableColumns.value.map(col => col.prop)
   handleColumnChange(visibleColumns.value)
+  // 强制刷新表格布局
+  nextTick(() => {
+    doLayout()
+  })
 }
 
 const isColumnVisible = (prop) => {
-  if (!prop || visibleColumns.value.length === 0) return true
+  // 如果没有 prop，返回 true（例如操作列）
+  if (!prop) return true
+  // 如果 visibleColumns 为空或未初始化，显示所有列
+  if (!visibleColumns.value || visibleColumns.value.length === 0) {
+    // 如果还没有初始化完成，默认显示所有列
+    return true
+  }
   return visibleColumns.value.includes(prop)
 }
 
@@ -627,7 +637,29 @@ onMounted(() => {
   // 恢复列显示设置
   const savedColumns = localStorage.getItem('table-visible-columns')
   if (savedColumns) {
-    visibleColumns.value = JSON.parse(savedColumns)
+    try {
+      const parsedColumns = JSON.parse(savedColumns)
+      // 验证保存的列设置是否有效
+      if (Array.isArray(parsedColumns) && parsedColumns.length > 0) {
+        // 过滤出当前实际存在的列
+        const validColumns = parsedColumns.filter(col => 
+          settableColumns.value.some(c => c.prop === col)
+        )
+        // 如果过滤后有有效列，使用它们；否则使用默认值
+        visibleColumns.value = validColumns.length > 0 
+          ? validColumns 
+          : settableColumns.value.map(col => col.prop)
+      } else {
+        // 如果保存的数据无效，使用默认值
+        visibleColumns.value = settableColumns.value.map(col => col.prop)
+      }
+    } catch (e) {
+      // 解析失败，使用默认值
+      console.warn('Failed to parse saved columns:', e)
+      visibleColumns.value = settableColumns.value.map(col => col.prop)
+      // 清除无效的存储
+      localStorage.removeItem('table-visible-columns')
+    }
   } else {
     visibleColumns.value = settableColumns.value.map(col => col.prop)
   }
